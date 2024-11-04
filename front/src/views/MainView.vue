@@ -16,7 +16,7 @@
             <h1 class="text-h2 font-weight-bold white--text mb-4">어서오세요</h1>
             <p class="text-h5 white--text mb-8">혁신적인 면접 준비 사이트</p>
             <v-btn x-large color="secondary" @click="$router.push('/chatbot')">시작하기</v-btn>
-            
+
           </v-col>
         </v-row>
       </v-container>
@@ -34,12 +34,12 @@
           </v-col>
         </v-row>
       </v-container>
-      
+
       <!-- 챗봇 UI 추가 -->
       <div v-if="isChatActive" class="chatbot-ui">
         <h2 class="chat-title">챗봇과 대화하기</h2>
         <div class="messages" v-for="msg in messages" :key="msg.id">
-          <p :class="{'user-message': msg.fromUser, 'bot-message': !msg.fromUser}">{{ msg.text }}</p>
+          <p :class="{ 'user-message': msg.fromUser, 'bot-message': !msg.fromUser }">{{ msg.text }}</p>
         </div>
         <v-text-field v-model="userInput" @keyup.enter="sendMessage" label="메시지를 입력하세요"></v-text-field>
         <v-btn @click="sendMessage" color="secondary">전송</v-btn>
@@ -124,11 +124,13 @@ const sendMessage = () => {
 
 .user-message {
   text-align: right;
-  color: blue; /* 사용자 메시지 색상 */
+  color: blue;
+  /* 사용자 메시지 색상 */
 }
 
 .bot-message {
   text-align: left;
-  color: green; /* 챗봇 메시지 색상 */
+  color: green;
+  /* 챗봇 메시지 색상 */
 }
 </style>
