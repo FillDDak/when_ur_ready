@@ -1,4 +1,6 @@
-![이미지 설명](front/src/assets/image.png)
+![이미지 설명](front/src/assets/image.png)<br>
+<br>
+***면접준비지원서비스***
 
 
 
