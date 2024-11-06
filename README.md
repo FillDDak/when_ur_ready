@@ -1,8 +1,8 @@
 # 준비되면
 
 
-
-
+https://noticon-static.tammolo.com/dgggcrkxq/image/upload/v1633404429/noticon/lziidomyb3wbbngotr4y.png
+기술스택
 <div style="display: flex; gap: 5px;">
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=OpenJDK&logoColor=white"> 
   <img src="https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=FFF"/> 
