@@ -21,11 +21,6 @@
 <br>
 
 
-<br>
-<br>
-<br>
-
-
 ***<h3>🔧기술스택</h3>***
 <div style="display: flex; gap: 5px;">
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=OpenJDK&logoColor=white"> 
@@ -34,7 +29,9 @@
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=FFF"/> 
   <img src="https://img.shields.io/badge/GitHub-EAEAEA?style=for-the-badge&logo=github&logoColor=000"/>
 </div>
-
+<br>
+<br>
+<br>
 
 ***<h3>🖥️화면 구현</h3>***
 -----------<br>
