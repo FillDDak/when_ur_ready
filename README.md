@@ -1,4 +1,4 @@
-(https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/front/src/assets/image.png)
+title
 
 
 
