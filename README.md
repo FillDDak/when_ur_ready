@@ -1,4 +1,4 @@
-![이미지 설명](https://example.com/이미지.png)
+![이미지 설명](front/src/assets/image.png)
 
 
 
