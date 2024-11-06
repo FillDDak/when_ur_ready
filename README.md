@@ -1,12 +1,5 @@
-![준비되면](https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/front/src/assets/image.png)
+(https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/front/src/assets/image.png)
 
-<v-img 
-      src="../assets/readylogo.png" 
-      alt="Logo" 
-      contain 
-      max-width="250" 
-      class="mr-2 mb-4"
-      @click="$router.push('/')"
 
 
 
