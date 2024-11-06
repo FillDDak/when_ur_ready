@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import Chatbot from '../views/Chatbot.vue'
 import DocumentChecker from '../views/DocumentChecker.vue'
-import Practice from '../views/Practice.vue'
+import Login from '../views/Login.vue'
+import SignUp from '../views/SignUp.vue'
 
 const routes = [
   {
@@ -13,7 +14,7 @@ const routes = [
   {
     path: '/chatbot',
     name: 'Chatbot',
-    component: Chatbot, // 챗봇 페이지를 설정합니다.
+    component: Chatbot, 
   },
   {
     path: '/documentchecker',
@@ -21,12 +22,21 @@ const routes = [
     component: DocumentChecker
   },
   {
-    path: '/practice',
-    name: 'Practice',
-    component: Practice
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: SignUp
+  },
+  {
+    path: '/review',  
+    name: 'Review',  
+    component: DocumentChecker 
   }
 ]
-
 
 const router = createRouter({
   history: createWebHashHistory(),
