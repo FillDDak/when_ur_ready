@@ -1,7 +1,8 @@
-<div style="display: flex; align-items: center; gap: 8px;">
+<div style="display: flex; flex-direction: column; align-items: flex-start;">
   <span>🚀 준비되면</span>
   <span>🔹맞춤형 면접 코칭 서비스</span>
 </div>
+
 
 
 
