@@ -1,4 +1,4 @@
-![내 사진](https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/front/src/assets/image.png)
+![준비되면](https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/front/src/assets/image.png)
 
 
 
