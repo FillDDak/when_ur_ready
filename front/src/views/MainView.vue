@@ -46,7 +46,7 @@
           <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
         </v-card-text>
         <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="signup" class="mb-2" rounded="xl" size="x-large" width="300">로그인</v-btn>
+          <v-btn style="background-color: #BADC6B;" @click="signup" class="mb-2" rounded="xl" size="x-large" width="300">회원가입</v-btn>
           <v-btn style="border: 2px solid #BADC6B;" @click="signupDialog = false" class="mb-2" rounded="xl" size="x-large" width="300" outlined>취소</v-btn>
         </v-card-actions>
       </v-card>
