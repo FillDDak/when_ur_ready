@@ -1,4 +1,5 @@
-https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/image.png
+![내 사진](https://raw.githubusercontent.com/seokmin1215/when_ur_ready/main/image.png)
+
 
 
 
