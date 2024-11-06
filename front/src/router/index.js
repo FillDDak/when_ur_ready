@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import Chatbot from '../views/Chatbot.vue'
 import DocumentChecker from '../views/DocumentChecker.vue'
+import Practice from '../views/Practice.vue'
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/documentchecker',
     name: 'DocumentChecker',
     component: DocumentChecker
+  },
+  {
+    path: '/practice',
+    name: 'Practice',
+    component: Practice
   }
 ]
 
