@@ -4,6 +4,10 @@ import Chatbot from '../views/Chatbot.vue'
 import DocumentChecker from '../views/DocumentChecker.vue'
 import Login from '../views/Login.vue'
 import SignUp from '../views/SignUp.vue'
+import Favorites from '../views/Favorites.vue'
+import Review from '../views/Review.vue'
+import MyPage from '../views/MyPage.vue'
+
 
 const routes = [
   {
@@ -35,6 +39,26 @@ const routes = [
     path: '/review',  
     name: 'Review',  
     component: DocumentChecker 
+  },
+
+  { path: '/',
+    name: 'MainView',
+    component: MainView 
+  },
+
+  { path: '/favorites',
+    name: 'Favorites',
+    component: Favorites
+  },
+
+  { path: '/review',
+    name: 'Review',
+    component: Review 
+  },
+
+  { path: '/mypage',
+    name: 'MyPage',
+    component: MyPage 
   }
 ]
 
