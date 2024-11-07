@@ -1,19 +1,9 @@
 <template>
   <v-container>
-    <!-- 로고 이미지 추가 -->
-    <v-img 
-      src="../assets/readylogo.png" 
-      alt="Logo" 
-      contain 
-      max-width="250" 
-      class="mr-2 mb-4"
-      @click="$router.push('/')"
-    />
-    
     <!-- URL 입력 필드 -->
     <v-text-field 
       v-model="companyUrl" 
-      label="회사 홈페이지의 URL을 입력하세요"
+      label="회사 홈페이지의 URL을 입력하세요."
       @input="submitUrl" 
     />
     
@@ -31,7 +21,7 @@
     <!-- 사용자 입력 및 전송 버튼 -->
     <v-text-field 
       v-model="userInput" 
-      label="메시지를 입력하세요" 
+      label="메시지를 입력하세요." 
       @keyup.enter="sendMessage" 
       outlined
       dense

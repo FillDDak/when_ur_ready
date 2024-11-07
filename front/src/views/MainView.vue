@@ -36,7 +36,8 @@
         <v-btn @click="sendMessage" color="secondary">전송</v-btn>
       </div>
     </v-main>
-
+    
+    <!-- 푸터 -->
     <v-footer app color="white">
       <v-container>
         <v-row no-gutters>
