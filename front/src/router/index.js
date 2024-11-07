@@ -36,26 +36,15 @@ const routes = [
     component: SignUp
   },
   {
-    path: '/review',  
-    name: 'Review',  
-    component: DocumentChecker 
-  },
-
-  { path: '/',
-    name: 'MainView',
-    component: MainView 
-  },
-
-  { path: '/favorites',
+    path: '/favorites',
     name: 'Favorites',
     component: Favorites
   },
-
-  { path: '/review',
-    name: 'Review',
-    component: Review 
+  {
+    path: '/review',  
+    name: 'Review',  
+    component: Review
   },
-
   { path: '/mypage',
     name: 'MyPage',
     component: MyPage 
