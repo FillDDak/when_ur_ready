@@ -2,8 +2,7 @@
   <v-app>
     <v-main>
       <v-container fluid class="hero-section" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
-        <v-row align="center" justify="center"
-          style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
+        <v-row align="center" justify="center" style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
           <v-col cols="12" md="8" class="text-center text-white">
             <h1 class="text-h2 font-weight-bold mb-4">반갑습니다!</h1>
             <p class="text-h5 mb-8">당신의 면접을 위한 맞춤형 지원 서비스</p>
@@ -55,49 +54,8 @@
   </v-app>
 </template>
 
-<<<<<<< HEAD
 <script setup>
-import { ref } from 'vue'
-
-const loginDialog = ref(false); // Dialog 표시 상태
-const signupDialog = ref(false); // Dialog 표시 상태
-
-// 로그인 입력 필드
-const email = ref('');
-const password = ref('');
-
-// 회원가입 입력 필드
-const signupEmail = ref('');
-const signupPassword = ref('');
-const signupPasswordConfirm = ref('');
-
-// 로그인 함수
-const login = () => {
-  console.log("로그인 시도:", email.value, password.value);
-  loginDialog.value = false; // 로그인 후 다이얼로그 닫기
-};
-
-// 회원가입 함수
-const signup = () => {
-  console.log("회원가입 시도:", signupEmail.value, signupPassword.value, signupPasswordConfirm.value);
-  signupDialog.value = false; // 회원가입 후 다이얼로그 닫기
-};
-
-// 백그라운드 이미지 배열
-const backgroundImages = [
-  'https://cdn.pixabay.com/photo/2018/05/18/06/03/job-interview-3410427_1280.jpg',
-  'https://cdn.pixabay.com/photo/2024/06/28/07/14/interview-8858772_1280.jpg',
-  'https://cdn.pixabay.com/photo/2019/04/16/11/15/job-4131482_1280.jpg'
-];
-
-const currentBackgroundImage = ref(backgroundImages[0]); // 초기 이미지 설정
-
-// 이미지 자동 변경 (5초마다)
-setInterval(() => {
-  const currentIndex = backgroundImages.indexOf(currentBackgroundImage.value);
-  const nextIndex = (currentIndex + 1) % backgroundImages.length;
-  currentBackgroundImage.value = backgroundImages[nextIndex];
-}, 5000);
+import { ref } from 'vue';
 
 const features = ref([
   { title: '즐겨찾기', description: '자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.', icon: 'mdi-star', color: 'yellow', link: '/favorites' },
@@ -105,8 +63,23 @@ const features = ref([
   { title: '마이페이지', description: '자신의 면접 준비 기록을 저장하고 피드백 및 추천 사항을 관리할 수 있는 개인 맞춤형 공간입니다.', icon: 'mdi-book', color: 'green', link: '/mypage' }
 ]);
 
-
 const socialIcons = ['mdi-facebook', 'mdi-twitter', 'mdi-linkedin'];
+
+// 백그라운드 이미지 설정
+const backgroundImages = [
+  'https://cdn.pixabay.com/photo/2018/05/18/06/03/job-interview-3410427_1280.jpg',
+  'https://cdn.pixabay.com/photo/2024/06/28/07/14/interview-8858772_1280.jpg',
+  'https://cdn.pixabay.com/photo/2019/04/16/11/15/job-4131482_1280.jpg'
+];
+
+const currentBackgroundImage = ref(backgroundImages[0]);
+
+// 이미지 자동 변경 (5초마다)
+setInterval(() => {
+  const currentIndex = backgroundImages.indexOf(currentBackgroundImage.value);
+  const nextIndex = (currentIndex + 1) % backgroundImages.length;
+  currentBackgroundImage.value = backgroundImages[nextIndex];
+}, 5000);
 
 // 챗봇 관련 상태
 const isChatActive = ref(false);
@@ -118,51 +91,9 @@ const sendMessage = () => {
   if (userInput.value.trim()) {
     messages.value.push({ id: messages.value.length + 1, fromUser: true, text: userInput.value });
     userInput.value = '';
-    // 자동 응답 메시지 추가 (간단한 예)
     setTimeout(() => {
       messages.value.push({ id: messages.value.length + 1, fromUser: false, text: "면접에 대한 질문을 주세요!" });
     }, 1000);
-=======
-<script>
-export default {
-  data() {
-    return {
-      backgroundImages: [
-        'https://cdn.pixabay.com/photo/2018/05/18/06/03/job-interview-3410427_1280.jpg',
-        'https://cdn.pixabay.com/photo/2024/06/28/07/14/interview-8858772_1280.jpg',
-        'https://cdn.pixabay.com/photo/2019/04/16/11/15/job-4131482_1280.jpg'
-      ],
-      currentBackgroundImage: '',
-      features: [
-        { title: '즐겨찾기', description: '자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.', icon: 'mdi-star', color: 'yellow', link: '/favorites' },
-        { title: '검토하기', description: '면접 준비 현황을 분석하여 개선이 필요한 부분을 파악하고 보다 전략적으로 준비할 수 있도록 도와드립니다.', icon: 'mdi-message', color: 'blue', link: '/review' },
-        { title: '마이페이지', description: '자신의 면접 준비 기록을 저장하고 피드백 및 추천 사항을 관리할 수 있는 개인 맞춤형 공간입니다.', icon: 'mdi-book', color: 'green', link: '/mypage' }
-      ],
-      socialIcons: ['mdi-facebook', 'mdi-twitter', 'mdi-linkedin'],
-      isChatActive: false,
-      messages: [{ id: 1, fromUser: false, text: "안녕하세요! 면접 준비를 도와드릴게요." }],
-      userInput: ''
-    };
-  },
-  mounted() {
-    this.currentBackgroundImage = this.backgroundImages[0];
-    setInterval(() => {
-      const currentIndex = this.backgroundImages.indexOf(this.currentBackgroundImage);
-      const nextIndex = (currentIndex + 1) % this.backgroundImages.length;
-      this.currentBackgroundImage = this.backgroundImages[nextIndex];
-    }, 5000);
-  },
-  methods: {
-    sendMessage() {
-      if (this.userInput.trim()) {
-        this.messages.push({ id: this.messages.length + 1, fromUser: true, text: this.userInput });
-        this.userInput = '';
-        setTimeout(() => {
-          this.messages.push({ id: this.messages.length + 1, fromUser: false, text: "면접에 대한 질문을 주세요!" });
-        }, 1000);
-      }
-    }
->>>>>>> 5abd3382bfaaebd7bc6e6cda18c83fc6a03c7aac
   }
 };
 </script>
@@ -203,14 +134,4 @@ export default {
   text-align: left;
   color: green;
 }
-
-.hero-section {
-  height: 100vh;
-  background-size: 70% auto;
-  /* 세로 비율을 자동으로 조정 */
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-image 1s ease-in-out;
-}</style>
+</style>

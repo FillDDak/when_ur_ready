@@ -63,31 +63,7 @@ const sendMessage = () => {
   }
 }
 
-// 봇 메시지를 한 글자씩 타이핑 효과로 출력
-const showBotMessage = (text) => {
-  loading.value = true
-  let index = 0
-  let messageText = ''
-  
-  // 메시지를 하나씩 출력하는 함수
-  const typeMessage = () => {
-    messageText += text[index]
-    messages.value.push({
-      id: messages.value.length + 1,
-      sender: '면접도우미',
-      text: messageText
-    })
-    index++
-    
-    if (index < text.length) {
-      setTimeout(typeMessage, 100) // 100ms 간격으로 한 글자씩 타이핑
-    } else {
-      loading.value = false
-    }
-  }
-  
-  typeMessage()
-}
+
 
 onUpdated(() => {
   const chatWindow = document.querySelector('.chat-window .v-card__text')
