@@ -1,171 +1,39 @@
 <template>
-  <v-container class="pa-4">
-    <!-- 로고 섹션 -->
-    <v-row justify="center" class="mb-4">
-      <v-img 
-        src="@/assets/readylogo.png" 
-        alt="Logo" 
-        contain 
-        max-width="250" 
-        @click="$router.push('/')"
-        class="cursor-pointer"
-      />
-    </v-row>
+  <v-container>
     
-    <!-- URL 입력 섹션 -->
-    <v-row justify="center" class="mb-6">
-      <v-col cols="12" sm="8" md="6">
-        <v-text-field 
-          v-model="companyUrl" 
-          label="회사 홈페이지의 URL을 입력하세요"
-          @input="submitUrl" 
-          outlined
-          dense
-        />
-        <v-alert v-if="submitted" type="success" class="mt-2">
-          입력한 URL: <a :href="companyUrl" target="_blank">{{ companyUrl }}</a>
-        </v-alert>
-      </v-col>
-    </v-row>
+    <h2>면접 1타 코칭 강사</h2>
+    <p>AI를 활용한 맞춤형 면접 준비 프로그램</p><br>
     
-    <!-- 챗봇 메시지 영역 -->
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6">
-        <v-card class="chat-window">
-          <v-card-text>
-            <div v-for="message in messages" :key="message.id" :class="['message', message.sender === '사용자' ? 'user-message' : 'bot-message']">
-              <div class="message-content">
-                <span class="sender">{{ message.sender }}:</span>
-                <span class="text">{{ message.text }}</span>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    
-    <!-- 사용자 입력 및 전송 버튼 -->
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6">
-        <v-text-field 
-          v-model="userInput" 
-          label="메시지를 입력하세요" 
-          @keyup.enter="sendMessage" 
-          outlined
-          dense
-        />
-        <v-btn 
-          color="primary" 
-          @click="sendMessage" 
-          class="mt-2" 
-          block>
-          전송
-        </v-btn>
-      </v-col>
-    </v-row>
-    
-    <!-- 뒤로가기 버튼 -->
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6" class="text-center">
-        <v-btn @click="$router.go(-1)" color="grey" outlined>
-          뒤로가기
-        </v-btn>
-      </v-col>
-    </v-row>
+
+    <v-text-field v-model="companyUrl" placeholder="회사 홈페이지의 URL을 입력하세요" outlined hide-details dense solo class="mb-4" :disabled="loading"/>
+    <v-btn color="black" dark @click="submitUrl" class="mb-2" block max-width="200px" :disabled="loading">
+      <v-icon left>mdi-send</v-icon> 분석 시작
+    </v-btn>
+
+    <v-progress-circular v-if="loading" indeterminate color="black" size="30" class="my-4"/>
+    <p class="text-muted" style="font-size: 0.9rem;">참고: 이 도구는 AI를 사용하여 면접 준비를 돕습니다. 실제 면접 질문 및 최적의 답변은 다를 수 있습니다.</p>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onUpdated } from 'vue'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-// 메시지 상태
-const messages = ref([
-  { id: 1, sender: '챗봇', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }
-])
-
-// 사용자 입력 필드
-const userInput = ref('')
-
-// URL 입력
+const router = useRouter()
 const companyUrl = ref('')
+const loading = ref(false)
 
-// 제출 상태
-const submitted = ref(false)
-
-// 메시지 전송 함수
-const sendMessage = () => {
-  if (userInput.value.trim() !== '') {
-    messages.value.push({ id: messages.value.length + 1, sender: '사용자', text: userInput.value })
-    userInput.value = '' // 입력 필드 비우기
-    // 챗봇 응답 예시
-    setTimeout(() => {
-      messages.value.push({ id: messages.value.length + 1, sender: '챗봇', text: '메시지를 받았습니다!' })
-    }, 1000)
-  }
-}
-
-// URL 제출 함수 (자동 실행)
 const submitUrl = () => {
   if (companyUrl.value.trim() !== '') {
-    submitted.value = true 
-    // 여기서 URL 분석 코드가 추가될 수 있습니다.
-  } else {
-    submitted.value = false
+    loading.value = true
+    setTimeout(() => {
+      loading.value = false
+      router.push('/chatbotpage') // /chatbotpage 경로로 이동
+    }, 2000)
   }
 }
-
-// 채팅 창 자동 스크롤
-onUpdated(() => {
-  const chatWindow = document.querySelector('.chat-window .v-card__text')
-  if (chatWindow) {
-    chatWindow.scrollTop = chatWindow.scrollHeight // 최신 메시지로 자동 스크롤
-  }
-})
 </script>
 
 <style scoped>
-.chat-window {
-  height: 400px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-}
-
-.message {
-  display: flex;
-  margin-bottom: 10px;
-}
-
-.user-message {
-  justify-content: flex-end;
-}
-
-.bot-message {
-  justify-content: flex-start;
-}
-
-.message-content {
-  max-width: 80%;
-  padding: 10px 15px;
-  border-radius: 15px;
-  background-color: #e0e0e0;
-  position: relative;
-}
-
-.user-message .message-content {
-  background-color: #1976d2;
-  color: white;
-}
-
-.sender {
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-.text {
-  word-wrap: break-word;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
+.text-muted { color: #6c757d; }
 </style>

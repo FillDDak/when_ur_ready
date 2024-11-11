@@ -1,12 +1,14 @@
+<!-- src/views/ChatBotPage.vue -->
 <template>
   <v-container class="pa-4">
     <v-row justify="center" class="mb-4">
-      <v-img src="../assets/readylogo.png" alt="Logo" contain max-width="250"/>
+      <!-- 로고 또는 기타 요소가 여기에 올 수 있습니다 -->
     </v-row>
 
+    <!-- 챗봇 메시지 영역 -->
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-        <v-card class="chat-window elevation-4">
+        <v-card class="chat-window">
           <v-card-text>
             <div v-for="message in messages" :key="message.id" :class="['message', message.sender === '나' ? 'user-message' : 'bot-message']">
               <div class="message-content">
@@ -19,28 +21,31 @@
       </v-col>
     </v-row>
 
+    <!-- 사용자 입력 및 전송 버튼 -->
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6">
         <v-text-field 
           v-model="userInput" 
           label="메시지를 입력하세요" 
           @keyup.enter="sendMessage" 
-          outlined 
-          dense 
-          color="blue-grey"
-          clearable
+          outlined
+          dense
         />
+        <v-btn 
+          @click="sendMessage" 
+          class="mt-2" 
+          block 
+          :style="{ backgroundColor: '#000000', color: 'white' }"
+        >
+          전송
+        </v-btn>
       </v-col>
     </v-row>
 
+    <!-- 뒤로가기 버튼 -->
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6" class="text-center">
-        <v-btn 
-          @click="$router.go(-1)" 
-          color="black" 
-          outlined 
-          rounded
-        >
+        <v-btn @click="$router.go(-1)" color="grey" outlined>
           뒤로가기
         </v-btn>
       </v-col>
@@ -53,17 +58,16 @@ import { ref, onUpdated } from 'vue'
 
 const messages = ref([{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }])
 const userInput = ref('')
-const loading = ref(false)
 
 const sendMessage = () => {
   if (userInput.value.trim() !== '') {
     messages.value.push({ id: messages.value.length + 1, sender: '나', text: userInput.value })
-    userInput.value = ''
-    showBotMessage('메시지를 받았습니다!')
+    userInput.value = '' // 입력 필드 비우기
+    setTimeout(() => {
+      messages.value.push({ id: messages.value.length + 1, sender: '면접도우미', text: '메시지를 받았습니다!' })
+    }, 1000)
   }
 }
-
-
 
 onUpdated(() => {
   const chatWindow = document.querySelector('.chat-window .v-card__text')
@@ -74,53 +78,34 @@ onUpdated(() => {
 </script>
 
 <style scoped>
-.chat-window { 
-  height: 400px; 
-  overflow-y: auto; 
-  background-color: #fafafa; 
-  border-radius: 12px; 
-  padding: 20px; 
-  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.1);
+.chat-window {
+  height: 400px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
 }
-.message { 
-  display: flex; 
-  margin-bottom: 12px; 
-  align-items: center;
+
+.message {
+  display: flex;
+  margin-bottom: 10px;
 }
-.user-message { 
-  justify-content: flex-end; 
+
+.user-message {
+  justify-content: flex-end;
 }
-.bot-message { 
-  justify-content: flex-start; 
+
+.bot-message {
+  justify-content: flex-start;
 }
-.message-content { 
-  max-width: 80%; 
-  padding: 14px 22px; 
-  border-radius: 25px; 
-  background-color: #dbe6fd; 
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+.message-content {
+  max-width: 80%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  background-color: #e0e0e0;
 }
-.user-message .message-content { 
-  background-color: #dbdbdb;
-  color: rgb(0, 0, 0); 
-  border-top-right-radius: 0;
-}
-.bot-message .message-content { 
-  background-color:  #a8e290;
-  color: rgb(0, 0, 0); 
-  border-top-left-radius: 0;
-}
-.sender { 
-  font-weight: bold; 
-  margin-right: 8px; 
-}
-.text { 
-  font-size: 15px;
-  line-height: 1.6;
-}
-.v-btn {
-  font-weight: 600;
-  border-radius: 25px;
-  text-transform: none;
+
+.user-message .message-content {
+  background-color: #808080; /* 그레이 색상 */
+  color: white;
 }
 </style>
