@@ -41,6 +41,7 @@ const routes = [
     component: SignUp
   },
   {
+<<<<<<< HEAD
     path: '/review',
     name: 'Review',
     component: Review 
@@ -52,6 +53,18 @@ const routes = [
   },
   {
     path: '/mypage',
+=======
+    path: '/favorites',
+    name: 'Favorites',
+    component: Favorites
+  },
+  {
+    path: '/review',  
+    name: 'Review',  
+    component: Review
+  },
+  { path: '/mypage',
+>>>>>>> 5abd3382bfaaebd7bc6e6cda18c83fc6a03c7aac
     name: 'MyPage',
     component: MyPage 
   }

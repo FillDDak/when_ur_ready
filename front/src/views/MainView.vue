@@ -1,60 +1,9 @@
 <template>
   <v-app>
-    <!-- 앱 바 -->
-    <v-app-bar :elevation="0" app dark :height="90">
-      <v-app-bar-title>
-        <v-img src="../assets/readylogo.png" alt="Logo" contain max-width="250" class="mr-2" @click="$router.push('/')"
-          style="cursor: pointer;"></v-img>
-      </v-app-bar-title>
-      <v-spacer></v-spacer>
-     
-      <v-btn class="mr-2">Home</v-btn>
-      <v-btn class="mr-2">About</v-btn>
-      <v-btn class="mr-2">Services</v-btn>
-      <v-btn class="mr-2">Contact</v-btn>
-      <v-btn style="background-color: #BADC6B; font-size: 16px;" class="mr-2" rounded="xl" @click="loginDialog = true">로그인</v-btn>
-      <v-btn style="background-color: lightgray; font-size: 16px;" class="mr-3" rounded="xl" @click="signupDialog = true">회원가입</v-btn>
-    </v-app-bar>
-
-    <!-- 로그인 다이얼로그 -->
-    <v-dialog v-model="loginDialog" max-width="400">
-      <v-card>
-        <v-img src="../assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
-        <v-card-text>
-          <h3>이메일</h3>
-          <v-text-field label="이메일" v-model="email"></v-text-field>
-          <h3>비밀번호</h3>
-          <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
-        </v-card-text>
-        <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="login" class="mb-2" rounded="xl" size="x-large" width="300">로그인</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;" @click="loginDialog = false" class="mb-2" rounded="xl" size="x-large" width="300" outlined>취소</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- 회원가입 다이얼로그 -->
-    <v-dialog v-model="signupDialog" max-width="400">
-      <v-card>
-        <v-img src="../assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
-        <v-card-text>
-          <h3>이메일</h3>
-          <v-text-field label="이메일" v-model="email"></v-text-field>
-          <h3>비밀번호</h3>
-          <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
-          <h3>비밀번호 재입력</h3>
-          <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
-        </v-card-text>
-        <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="signup" class="mb-2" rounded="xl" size="x-large" width="300">회원가입</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;" @click="signupDialog = false" class="mb-2" rounded="xl" size="x-large" width="300" outlined>취소</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-main>
       <v-container fluid class="hero-section" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
-        <v-row align="center" justify="center" style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
+        <v-row align="center" justify="center"
+          style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
           <v-col cols="12" md="8" class="text-center text-white">
             <h1 class="text-h2 font-weight-bold mb-4">반갑습니다!</h1>
             <p class="text-h5 mb-8">당신의 면접을 위한 맞춤형 지원 서비스</p>
@@ -87,7 +36,8 @@
         <v-btn @click="sendMessage" color="secondary">전송</v-btn>
       </div>
     </v-main>
-
+    
+    <!-- 푸터 -->
     <v-footer app color="white">
       <v-container>
         <v-row no-gutters>
@@ -103,13 +53,9 @@
       </v-container>
     </v-footer>
   </v-app>
-  <div class="book-container">
-  <div class="page" style="background-image: url('image1.jpg');"></div>
-  <div class="page" style="background-image: url('image2.jpg');"></div>
-  <div class="page" style="background-image: url('image3.jpg');"></div>
-</div>
 </template>
 
+<<<<<<< HEAD
 <script setup>
 import { ref } from 'vue'
 
@@ -176,6 +122,47 @@ const sendMessage = () => {
     setTimeout(() => {
       messages.value.push({ id: messages.value.length + 1, fromUser: false, text: "면접에 대한 질문을 주세요!" });
     }, 1000);
+=======
+<script>
+export default {
+  data() {
+    return {
+      backgroundImages: [
+        'https://cdn.pixabay.com/photo/2018/05/18/06/03/job-interview-3410427_1280.jpg',
+        'https://cdn.pixabay.com/photo/2024/06/28/07/14/interview-8858772_1280.jpg',
+        'https://cdn.pixabay.com/photo/2019/04/16/11/15/job-4131482_1280.jpg'
+      ],
+      currentBackgroundImage: '',
+      features: [
+        { title: '즐겨찾기', description: '자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.', icon: 'mdi-star', color: 'yellow', link: '/favorites' },
+        { title: '검토하기', description: '면접 준비 현황을 분석하여 개선이 필요한 부분을 파악하고 보다 전략적으로 준비할 수 있도록 도와드립니다.', icon: 'mdi-message', color: 'blue', link: '/review' },
+        { title: '마이페이지', description: '자신의 면접 준비 기록을 저장하고 피드백 및 추천 사항을 관리할 수 있는 개인 맞춤형 공간입니다.', icon: 'mdi-book', color: 'green', link: '/mypage' }
+      ],
+      socialIcons: ['mdi-facebook', 'mdi-twitter', 'mdi-linkedin'],
+      isChatActive: false,
+      messages: [{ id: 1, fromUser: false, text: "안녕하세요! 면접 준비를 도와드릴게요." }],
+      userInput: ''
+    };
+  },
+  mounted() {
+    this.currentBackgroundImage = this.backgroundImages[0];
+    setInterval(() => {
+      const currentIndex = this.backgroundImages.indexOf(this.currentBackgroundImage);
+      const nextIndex = (currentIndex + 1) % this.backgroundImages.length;
+      this.currentBackgroundImage = this.backgroundImages[nextIndex];
+    }, 5000);
+  },
+  methods: {
+    sendMessage() {
+      if (this.userInput.trim()) {
+        this.messages.push({ id: this.messages.length + 1, fromUser: true, text: this.userInput });
+        this.userInput = '';
+        setTimeout(() => {
+          this.messages.push({ id: this.messages.length + 1, fromUser: false, text: "면접에 대한 질문을 주세요!" });
+        }, 1000);
+      }
+    }
+>>>>>>> 5abd3382bfaaebd7bc6e6cda18c83fc6a03c7aac
   }
 };
 </script>
@@ -216,13 +203,14 @@ const sendMessage = () => {
   text-align: left;
   color: green;
 }
+
 .hero-section {
   height: 100vh;
-  background-size: 70% auto; /* 세로 비율을 자동으로 조정 */
+  background-size: 70% auto;
+  /* 세로 비율을 자동으로 조정 */
   background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: background-image 1s ease-in-out;
-}
-</style>
+}</style>
