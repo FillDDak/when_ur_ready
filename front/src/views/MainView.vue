@@ -139,9 +139,9 @@ const signup = () => {
 
 // 백그라운드 이미지 배열
 const backgroundImages = [
-  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzEyMDRfMjMg%2FMDAxNzAxNjg0MzgwNTQ5.R1LJwG9ImlNnSLWhFanT_SCCNXG9rY8s14pqo4h4CPMg.yBrUtHgWAGebKxdnBWw-OM8BMUM8qcZ_R6RUdD9i4-sg.PNG.ipon0331%2FKakaoTalk_20231204_190307477.png&type=sc960_832',
-  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjA4MDVfMjIw%2FMDAxNjU5NzEwNTYwODIx.t2nHhlc4mnVWmXSIFISL6jvozSwiNptWDogrzINtk6Mg.Q4PtJuTBYd8fKpXNmmNsPTM7i8kXNnvQ89sHcEbJTR8g.JPEG.pursea%2F%25C1%25A6%25B8%25F1%25C0%25BB_%25C0%25D4%25B7%25C2%25C7%25D8%25C1%25D6%25BC%25BC%25BF%25E4_-001_-_2022-08-05T234226.655.jpg&type=sc960_832',
-  'https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzA4MjRfMTA0%2FMDAxNjkyODUxNzAyNTcw.6u_ubN51icn2wxSNEV7sUYOFRLs9Z2BjeqKAWqwV_rEg.elkDp_iyoWSOlG8kS9bL_sOE19vSyHkiJl42uAPILREg.JPEG.sandygroup%2FScreenshot%25A3%25DF20230824%25A3%25DF133217%25A3%25DFSamsung_Internet.jpg&type=sc960_832'
+  'https://cdn.pixabay.com/photo/2018/05/18/06/03/job-interview-3410427_1280.jpg',
+  'https://cdn.pixabay.com/photo/2024/06/28/07/14/interview-8858772_1280.jpg',
+  'https://cdn.pixabay.com/photo/2019/04/16/11/15/job-4131482_1280.jpg'
 ];
 
 const currentBackgroundImage = ref(backgroundImages[0]); // 초기 이미지 설정
