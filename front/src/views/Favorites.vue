@@ -1,7 +1,6 @@
 <template>
     <v-container>
-      <h1>즐겨찾기</h1>
-      <p>자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.</p>
+      <h1>*즐겨찾기*</h1>
   
       <!-- 검색 바 -->
       <v-text-field 
@@ -22,7 +21,6 @@
               <p>{{ item.description }}</p>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary" @click="viewDetails(item)">미리보기</v-btn>
               <v-btn color="error" @click="removeFavorite(index)">삭제</v-btn>
               <v-btn color="success" @click="shareFavorite(item)">공유</v-btn>
             </v-card-actions>
