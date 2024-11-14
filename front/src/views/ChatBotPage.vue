@@ -1,4 +1,3 @@
-<!-- src/views/ChatBotPage.vue -->
 <template>
   <v-container class="pa-4">
     <v-row justify="center" class="mb-4">
@@ -54,25 +53,45 @@
 </template>
 
 <script setup>
-import { ref, onUpdated } from 'vue'
+import { ref, onMounted, onUpdated } from 'vue'
 
 const messages = ref([{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }])
 const userInput = ref('')
 
+// 로컬 스토리지에서 키워드 및 예상 질문 불러오기
+onMounted(() => {
+  const storedData = localStorage.getItem('keywordsAndQuestions');
+  if (storedData) {
+    const keywordsAndQuestions = JSON.parse(storedData);
+
+    // 챗봇 첫 메시지로 키워드 및 예상 질문을 표시
+    if (keywordsAndQuestions.keywords && keywordsAndQuestions.questions) {
+      messages.value.push(
+        { id: messages.value.length + 1, sender: '면접도우미', text: `키워드: ${keywordsAndQuestions.keywords.join(', ')}` },
+        { id: messages.value.length + 2, sender: '면접도우미', text: `예상 질문: ${keywordsAndQuestions.questions.join(', ')}` }
+      );
+    }
+  }
+});
+
+// 사용자가 메시지를 입력하고 전송 버튼을 클릭할 때
 const sendMessage = () => {
   if (userInput.value.trim() !== '') {
-    messages.value.push({ id: messages.value.length + 1, sender: '나', text: userInput.value })
-    userInput.value = '' // 입력 필드 비우기
+    messages.value.push({ id: messages.value.length + 1, sender: '나', text: userInput.value });
+    userInput.value = ''; // 입력 필드 비우기
+    
+    // 챗봇의 간단한 응답을 추가
     setTimeout(() => {
-      messages.value.push({ id: messages.value.length + 1, sender: '면접도우미', text: '메시지를 받았습니다!' })
-    }, 1000)
+      messages.value.push({ id: messages.value.length + 1, sender: '면접도우미', text: '질문에 대한 답변을 준비하고 있습니다!' });
+    }, 1000);
   }
 }
 
+// 새 메시지가 추가될 때 자동 스크롤
 onUpdated(() => {
-  const chatWindow = document.querySelector('.chat-window .v-card__text')
+  const chatWindow = document.querySelector('.chat-window .v-card__text');
   if (chatWindow) {
-    chatWindow.scrollTop = chatWindow.scrollHeight
+    chatWindow.scrollTop = chatWindow.scrollHeight;
   }
 })
 </script>
