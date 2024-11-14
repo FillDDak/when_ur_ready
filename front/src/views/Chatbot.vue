@@ -28,7 +28,7 @@ const submitUrl = () => {
     loading.value = true
     setTimeout(() => {
       loading.value = false
-      router.push('/chatbotpage') // /chatbotpage 경로로 이동
+      router.push('/chatbotpage') 
     }, 2000)
   }
 }
