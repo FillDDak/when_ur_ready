@@ -5,6 +5,8 @@ import store from './store'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import axios from "axios"
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap';
 
 loadFonts()
 axios.baseURL = "/api"
