@@ -13,10 +13,15 @@
         <v-btn class="mr-2 button-hover">About</v-btn>
         <v-btn class="mr-2 button-hover">Services</v-btn>
         <v-btn class="mr-2 button-hover">Contact</v-btn>
-        <v-btn style="background-color: #BADC6B; font-size: 16px;" class="mr-2 font-weight-bold" rounded="xl"
-          @click="loginDialog = true">로그인</v-btn>
-        <v-btn style="background-color: lightgray; font-size: 16px;" class="mr-3 font-weight-bold" rounded="xl"
-          @click="$router.push('/signup')">회원가입</v-btn>
+        <v-btn v-if="!$store.state.loginUser" style="background-color: #BADC6B; font-size: 16px;"
+          class="mr-2 font-weight-bold" rounded="xl" @click="loginDialog = true">로그인</v-btn>
+        <v-btn v-if="!$store.state.loginUser" style="background-color: lightgray; font-size: 16px;"
+          class="mr-3 font-weight-bold" rounded="xl" @click="$router.push('/signup')">회원가입</v-btn>
+        <v-btn v-if="$store.state.loginUser" style="background-color: #BADC6B; font-size: 16px;"
+          class="mr-3 font-weight-bold" rounded="xl" @click="$router.push('/')"><v-icon
+            size="x-large">mdi-account-circle</v-icon></v-btn>
+        <v-btn v-if="$store.state.loginUser" style="background-color: lightgray; font-size: 16px;"
+          class="mr-3 font-weight-bold" rounded="xl" @click="logout">로그아웃</v-btn>
       </v-app-bar>
       <router-view />
     </v-main>
@@ -26,17 +31,19 @@
       <v-card>
         <v-img src="./assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
         <v-card-text>
-          <h5>이메일</h5>
-          <v-text-field label="이메일" v-model="email" variant="outlined"></v-text-field>
+          <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
+          <h5>아이디</h5>
+          <v-text-field label="아이디" v-model="user.id" variant="outlined"></v-text-field>
           <h5>비밀번호</h5>
-          <v-text-field label="비밀번호" v-model="password" variant="outlined" type="password"></v-text-field>
+          <v-text-field label="비밀번호" v-model="user.password" variant="outlined" type="password"></v-text-field>
           <span class="text-button" @click="handleClick">비밀번호를 잊으셨나요?</span>
         </v-card-text>
         <v-card-actions class="d-flex flex-column justify-center">
           <v-btn style="background-color: #BADC6B;" @click="login" rounded="xl" size="x-large" width="300">로그인</v-btn>
           <v-btn text @click="$router.push('/signup'), loginDialog = false" class="button-hover">또는 회원가입</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;" @click="loginDialog = false" class="mb-2" rounded="xl" size="x-large"
-            width="300" outlined>취소</v-btn>
+          <v-btn style="border: 2px solid #BADC6B;"
+            @click="loginDialog = false, errorMessage = '', user.id = '', user.password = ''" class="mb-2" rounded="xl"
+            size="x-large" width="300" outlined>취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -70,17 +77,43 @@ export default {
     return {
       loginDialog: false,
       signupDialog: false,
-      email: '',
-      password: '',
-      signupEmail: '',
-      signupPassword: '',
-      signupPasswordConfirm: ''
+      errorMessage: '',
+      user: {
+        id: '',
+        password: ''
+      }
     };
+  },
+  mounted() {
+    this.$axios.post("/api/users/info")
+      .then(response => {
+        if (response.data.result == "success") {
+          this.$store.commit("setLoginUser", response.data.user)
+        }
+      })
   },
   methods: {
     login() {
-      console.log("로그인 시도:", this.email, this.password);
-      this.loginDialog = false;
+      this.$axios.post("/api/users/login", this.user)
+        .then(response => {
+          if (response.data.result == "success") {
+            this.$store.commit("setLoginUser", response.data.user)
+            alert("로그인에 성공 했습니다.")
+            this.loginDialog = false
+            this.$router.push("/")
+          } else {
+            this.errorMessage = response.data.message;
+          }
+        })
+    },
+    logout() {
+      this.$axios.post("/api/users/logout")
+        .then(response => {
+          if (response.data.result == "success") {
+            this.$store.commit("logout")
+            this.$router.push('/')
+          }
+        })
     },
     signup() {
       console.log("회원가입 시도:", this.signupEmail, this.signupPassword, this.signupPasswordConfirm);

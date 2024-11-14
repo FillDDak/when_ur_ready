@@ -23,8 +23,8 @@
                   required></v-select>
                 <v-select v-model="user.targetCompany" :items="targetCompanies" label="목표 회사" variant="outlined"
                   required></v-select>
-                <v-select v-model="user.interviewExperience" :items="['선택하지 않음', '있다', '없다']" variant="outlined" label="면접 경험"
-                  required></v-select>
+                <v-select v-model="user.interviewExperience" :items="['선택하지 않음', '있다', '없다']" variant="outlined"
+                  label="면접 경험" required></v-select>
                 <v-checkbox v-model="user.isOver15" label="[필수] 만 15세 이상입니다." required></v-checkbox>
                 <v-checkbox v-model="user.termsAgreement" label="[필수] 이용약관 동의" required></v-checkbox>
                 <v-checkbox v-model="user.privacyAgreement" label="[필수] 개인정보 수집 및 이용 동의" required></v-checkbox>
@@ -46,6 +46,7 @@ export default {
   data() {
     return {
       valid: false,
+      errorMessage: '',
       user: {
         id: '',
         password: '',
@@ -68,8 +69,7 @@ export default {
       ],
       experienceLevels: ['선택하지 않음', '신입', '1-2년', '3-5년', '6-10년', '10년 이상'],
       interviewStatuses: ['선택하지 않음', '시작하지 않음', '진행 중', '거의 끝남'],
-      targetCompanies: ['선택하지 않음', '공무원', '공기업', '대기업', '중견/중소기업', '외국계 기업', '기타'],
-
+      targetCompanies: ['선택하지 않음', '공무원', '공기업', '대기업', '중견/중소기업', '외국계 기업', '기타']
     };
   },
   methods: {
@@ -139,4 +139,5 @@ span {
 
 .v-btn[small] {
   padding: 5px 10px;
-}</style>
+}
+</style>

@@ -52,4 +52,62 @@ router.post("/join", async function (req, res) {
   });
 });
 
+router.post("/login", async function (req, res) {
+  if (!req.body.id || !req.body.password) {
+    console.log({
+      result: "fail",
+      message: "아이디와 비밀번호를 입력해주세요."
+    });
+    res.json({
+      result: "fail",
+      message: "아이디와 비밀번호를 입력해주세요."
+    });
+    return;
+  }
+
+  var checkUser = await sequelize.models.user.findOne({
+    where: {
+      id: req.body.id,
+      password: req.body.password
+    }
+  });
+  if (!checkUser) {
+    console.log({
+      result: "fail",
+      message: "아이디 또는 패스워드가 틀렸습니다."
+    });
+    res.json({
+      result: "fail",
+      message: "아이디 또는 패스워드가 틀렸습니다."
+    });
+    return;
+  }
+  req.session.user = checkUser;
+
+  res.json({
+    result: "success",
+    user: checkUser
+  });
+});
+
+router.post("/info", async function (req, res) {
+  if (req.session.user) {
+    res.json({
+      result: "success",
+      user: req.session.user
+    });
+  } else {
+    res.json({
+      result: "fail"
+    });
+  }
+});
+
+router.post("/logout", async function (req, res) {
+  req.session.destroy();
+  res.json({
+    result: "success"
+  });
+});
+
 module.exports = router;
