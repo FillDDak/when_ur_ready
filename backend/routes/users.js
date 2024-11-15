@@ -53,32 +53,42 @@ router.post("/join", async function (req, res) {
 });
 
 router.post("/login", async function (req, res) {
-  if (!req.body.id || !req.body.password) {
-    console.log({
-      result: "fail",
-      message: "아이디와 비밀번호를 입력해주세요."
-    });
+  if (!req.body.id) {
     res.json({
       result: "fail",
-      message: "아이디와 비밀번호를 입력해주세요."
+      field: "id",
+      message: "아이디를 입력해주세요."
+    });
+    return;
+  }
+
+  if (!req.body.password) {
+    res.json({
+      result: "fail",
+      field: "password",
+      message: "비밀번호를 입력해주세요."
     });
     return;
   }
 
   var checkUser = await sequelize.models.user.findOne({
     where: {
-      id: req.body.id,
-      password: req.body.password
+      id: req.body.id
     }
   });
   if (!checkUser) {
-    console.log({
-      result: "fail",
-      message: "아이디 또는 패스워드가 틀렸습니다."
-    });
     res.json({
       result: "fail",
-      message: "아이디 또는 패스워드가 틀렸습니다."
+      field: "id",
+      message: "존재하지 않는 아이디입니다."
+    });
+    return;
+  }
+  if (checkUser.password !== req.body.password) {
+    res.json({
+      result: "fail",
+      field: "password",
+      message: "비밀번호가 틀렸습니다."
     });
     return;
   }
