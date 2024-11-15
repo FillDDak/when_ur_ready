@@ -1,12 +1,6 @@
-
 <template>
   <v-container class="pa-4">
     <v-row justify="center" class="mb-4">
-     
-    </v-row>
-
-    
-    <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="chat-window">
           <v-card-text>
@@ -21,7 +15,6 @@
       </v-col>
     </v-row>
 
-   
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6">
         <v-text-field 
@@ -42,7 +35,6 @@
       </v-col>
     </v-row>
 
-    
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6" class="text-center">
         <v-btn @click="$router.go(-1)" color="grey" outlined>
@@ -50,14 +42,31 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <!-- 키워드 출력 -->
+    <v-row justify="center" class="mt-4">
+      <v-col cols="12" sm="8" md="6" class="text-center">
+        <p>키워드: {{ keywords }}</p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onUpdated } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 const messages = ref([{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }])
 const userInput = ref('')
+const keywords = ref('')
+
+const route = useRoute()
+
+// 컴포넌트가 마운트될 때 키워드를 받아옴
+onMounted(() => {
+  // URL에서 키워드를 가져와서 표시
+  keywords.value = route.query.keywords || '키워드가 없습니다.'
+})
 
 const sendMessage = () => {
   if (userInput.value.trim() !== '') {
@@ -69,6 +78,7 @@ const sendMessage = () => {
   }
 }
 
+// 스크롤 자동화
 onUpdated(() => {
   const chatWindow = document.querySelector('.chat-window .v-card__text')
   if (chatWindow) {

@@ -1,9 +1,7 @@
 <template>
   <v-container>
-    
     <h2>면접 1타 코칭 강사</h2>
     <p>AI를 활용한 맞춤형 면접 준비 프로그램</p><br>
-    
 
     <v-text-field v-model="companyUrl" placeholder="회사 홈페이지의 URL을 입력하세요" outlined hide-details dense solo class="mb-4" :disabled="loading"/>
     <v-btn color="black" dark @click="submitUrl" class="mb-2" block max-width="200px" :disabled="loading">
@@ -18,22 +16,36 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 const router = useRouter()
 const companyUrl = ref('')
 const loading = ref(false)
 
-const submitUrl = () => {
+const submitUrl = async () => {
   if (companyUrl.value.trim() !== '') {
     loading.value = true
-    setTimeout(() => {
+    
+    try {
+      // URL을 JSON 형식으로 보내기
+      const response = await axios.post('http://localhost:3000/extract-keywords', {
+        url: companyUrl.value  // URL을 JSON 형태로 전송
+      }, {
+        headers: {
+          'Content-Type': 'application/json'  // Content-Type을 application/json으로 설정
+        }
+      })
+
+      console.log('Extracted Text:', response.data.extractedText) // 응답 데이터에서 텍스트 확인
+      console.log('Keywords:', response.data.keywords) // 키워드 확인
+
+      // 키워드를 챗봇 페이지로 전달
+      router.push({ name: 'chatbotpage', query: { keywords: response.data.keywords } })
+    } catch (error) {
+      console.error('Error extracting keywords:', error)
+    } finally {
       loading.value = false
-      router.push('/chatbotpage') 
-    }, 2000)
+    }
   }
 }
 </script>
-
-<style scoped>
-.text-muted { color: #6c757d; }
-</style>
