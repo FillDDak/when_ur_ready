@@ -14,7 +14,8 @@
         <v-btn class="mr-2 button-hover">Services</v-btn>
         <v-btn class="mr-2 button-hover">Contact</v-btn>
         <v-btn v-if="!$store.state.loginUser" style="background-color: #BADC6B; font-size: 16px;"
-          class="mr-2 font-weight-bold" rounded="xl" @click="loginDialog = true">로그인</v-btn>
+          class="mr-2 font-weight-bold" rounded="xl" @click="loginDialog = true, user.id = '', user.password = '',
+            idErrorMessage = '', passwordErrorMessage = '', showPassword = false">로그인</v-btn>
         <v-btn v-if="!$store.state.loginUser" style="background-color: lightgray; font-size: 16px;"
           class="mr-3 font-weight-bold" rounded="xl" @click="$router.push('/signup')">회원가입</v-btn>
         <v-btn v-if="$store.state.loginUser" style="background-color: #BADC6B; font-size: 16px;"
@@ -31,43 +32,25 @@
       <v-card>
         <v-img src="./assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
         <v-card-text>
-          <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
           <h5>아이디</h5>
-          <v-text-field label="아이디" v-model="user.id" variant="outlined"></v-text-field>
+          <v-text-field label="아이디" v-model="user.id" variant="outlined" :error-messages="idErrorMessage"
+            @input="idErrorMessage = ''"></v-text-field>
           <h5>비밀번호</h5>
-          <v-text-field label="비밀번호" v-model="user.password" variant="outlined" type="password"></v-text-field>
+          <v-text-field label="비밀번호" v-model="user.password" variant="outlined" :type="showPassword ? 'text' : 'password'"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append-inner="togglePasswordVisibility"
+            :error-messages="passwordErrorMessage" @input="passwordErrorMessage = ''">
+          </v-text-field>
           <span class="text-button" @click="handleClick">비밀번호를 잊으셨나요?</span>
         </v-card-text>
         <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="login" rounded="xl" size="x-large" width="300">로그인</v-btn>
+          <v-btn style="background-color: #BADC6B;" @click="login" class="font-weight-bold" rounded="xl"
+            size="x-large" width="300">로그인</v-btn>
           <v-btn text @click="$router.push('/signup'), loginDialog = false" class="button-hover">또는 회원가입</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;"
-            @click="loginDialog = false, errorMessage = '', user.id = '', user.password = ''" class="mb-2" rounded="xl"
-            size="x-large" width="300" outlined>취소</v-btn>
+          <v-btn style="border: 2px solid #BADC6B;" @click="loginDialog = false" class="mb-2 font-weight-bold"
+            rounded="xl" size="x-large" width="300" outlined>취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- 회원가입 다이얼로그 -->
-    <!-- <v-dialog v-model="signupDialog" max-width="400">
-      <v-card>
-        <v-img src="./assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
-        <v-card-text>
-          <h3>이메일</h3>
-          <v-text-field label="이메일" v-model="email"></v-text-field>
-          <h3>비밀번호</h3>
-          <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
-          <h3>비밀번호 재입력</h3>
-          <v-text-field label="비밀번호" v-model="password" type="password"></v-text-field>
-        </v-card-text>
-        <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="signup" class="mb-2" rounded="xl" size="x-large"
-            width="300">회원가입</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;" @click="signupDialog = false" class="mb-2" rounded="xl" size="x-large"
-            width="300" outlined>취소</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog> -->
   </v-app>
 </template>
 
@@ -76,8 +59,9 @@ export default {
   data() {
     return {
       loginDialog: false,
-      signupDialog: false,
-      errorMessage: '',
+      showPassword: false,
+      idErrorMessage: '',
+      passwordErrorMessage: '',
       user: {
         id: '',
         password: ''
@@ -102,7 +86,12 @@ export default {
             this.loginDialog = false
             this.$router.push("/")
           } else {
-            this.errorMessage = response.data.message;
+            if (response.data.field === "id") {
+              this.idErrorMessage = response.data.message;
+            }
+            else if (response.data.field === "password") {
+              this.passwordErrorMessage = response.data.message;
+            }
           }
         })
     },
@@ -115,9 +104,8 @@ export default {
           }
         })
     },
-    signup() {
-      console.log("회원가입 시도:", this.signupEmail, this.signupPassword, this.signupPasswordConfirm);
-      this.signupDialog = false;
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
     }
   }
 };
