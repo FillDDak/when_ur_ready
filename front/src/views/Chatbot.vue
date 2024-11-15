@@ -14,8 +14,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue' // ref는 기본 값 또는 객체를 감싸서 반응형 데이터 생성
+import { useRouter } from 'vue-router' // 현재 라우터 인스턴스에 접근하고, 페이지 간 네비게이션을 제어
 import axios from 'axios'
 
 const router = useRouter()
