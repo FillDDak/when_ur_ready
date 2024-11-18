@@ -13,7 +13,8 @@
                   label="아이디" 
                   variant="outlined" 
                   :error-messages="idErrorMessage" 
-                  @input="idErrorMessage = ''">
+                  @input="idErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 비밀번호 필드 -->
@@ -23,7 +24,8 @@
                   variant="outlined" 
                   type="password" 
                   :error-messages="passwordErrorMessage" 
-                  @input="passwordErrorMessage = ''">
+                  @input="passwordErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 이름 필드 -->
@@ -32,7 +34,8 @@
                   label="이름 (실명)" 
                   variant="outlined" 
                   :error-messages="nameErrorMessage" 
-                  @input="nameErrorMessage = ''">
+                  @input="nameErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 생년월일 필드 -->
@@ -41,7 +44,8 @@
                   label="생년월일 (예: 20001231)" 
                   variant="outlined" 
                   :error-messages="birthDateErrorMessage" 
-                  @input="birthDateErrorMessage = ''">
+                  @input="birthDateErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 이메일 필드 -->
@@ -50,7 +54,8 @@
                   label="이메일" 
                   variant="outlined" 
                   :error-messages="emailErrorMessage" 
-                  @input="emailErrorMessage = ''">
+                  @input="emailErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 휴대폰 번호 필드 -->
@@ -59,7 +64,8 @@
                   label="휴대폰 번호" 
                   variant="outlined" 
                   :error-messages="phoneNumberErrorMessage" 
-                  @input="phoneNumberErrorMessage = ''">
+                  @input="phoneNumberErrorMessage = ''"
+                  @keyup.enter="submitSignup">
                 </v-text-field>
 
                 <!-- 구직 희망 분야 선택 -->
@@ -113,8 +119,9 @@
               </v-form>
             </v-card-text>
 
-            <v-card-actions>
-              <v-btn color="primary" @click="submitSignup">회원가입</v-btn>
+            <v-card-actions class="d-flex flex-column justify-center">
+              <v-btn style="background-color: #BADC6B;" @click="submitSignup" class="font-weight-bold" rounded="xl"
+                size="x-large" width="300">회원가입</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>

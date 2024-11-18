@@ -28,7 +28,7 @@
     </v-main>
 
     <!-- 로그인 다이얼로그 -->
-    <v-dialog v-model="loginDialog" max-width="400">
+    <v-dialog v-model="loginDialog" max-width="400" @keyup.enter="login">
       <v-card>
         <v-img src="./assets/readylogo.png" alt="Logo" contain max-height="100"></v-img>
         <v-card-text>
