@@ -7,6 +7,8 @@ import Favorites from '../views/Favorites.vue'
 import Review from '../views/Review.vue'
 import MyPage from '../views/MyPage.vue'
 import ChatBotPage from '@/views/ChatBotPage.vue'
+import Example from '../views/Example.vue'
+import About from '../views/About.vue'
 
 const routes = [
   {
@@ -48,6 +50,16 @@ const routes = [
     path: '/mypage',
     name: 'MyPage',
     component: MyPage 
+  },
+  {
+    path: '/example',
+    name: 'Example',
+    component: Example
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: About
   }
 ]
 

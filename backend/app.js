@@ -86,9 +86,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-// 서버 실행
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
-});
-
 module.exports = app;
