@@ -24,7 +24,7 @@ router.post("/extract-keywords", express.json(), async (req, res) => {
     const aiResponse = await axios.post('https://api.openai.com/v1/completions', {
       model: 'text-davinci-003',
       prompt: `이 URL을 분석하여 면접 관련 핵심 키워드를 뽑아 주세요: ${url}`,
-      max_tokens: 2000
+      max_tokens: 500
     }, {
       headers: {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`

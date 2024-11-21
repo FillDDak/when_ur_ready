@@ -13,38 +13,44 @@
   </v-container>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue' // ref는 기본 값 또는 객체를 감싸서 반응형 데이터 생성
 import { useRouter } from 'vue-router' // 현재 라우터 인스턴스에 접근하고, 페이지 간 네비게이션을 제어
 import axios from 'axios'
 
-const router = useRouter()
-const companyUrl = ref('')
-const loading = ref(false)
+export default {
+  data() {
+    return {
+      companyUrl: '',
+      loading: false
+    }
+  },
+  methods: {
+    async submitUrl() {
+      if (this.companyUrl.trim() !== '') {
+        this.loading = true
 
-const submitUrl = async () => {
-  if (companyUrl.value.trim() !== '') {
-    loading.value = true
-    
-    try {
-      // URL을 JSON 형식으로 보내기
-      const response = await axios.post('http://localhost:3000/extract-keywords', {
-        url: companyUrl.value  // URL을 JSON 형태로 전송
-      }, {
-        headers: {
-          'Content-Type': 'application/json'  // Content-Type을 application/json으로 설정
+        try {
+          // URL을 JSON 형식으로 보내기
+          const response = await axios.post('http://localhost:3000/extract-keywords', {
+            url: this.companyUrl  // URL을 JSON 형태로 전송
+          }, {
+            headers: {
+              'Content-Type': 'application/json'  // Content-Type을 application/json으로 설정
+            }
+          })
+
+          console.log('Extracted Text:', response.data.extractedText) // 응답 데이터에서 텍스트 확인
+          console.log('Keywords:', response.data.keywords) // 키워드 확인
+
+          // 키워드를 챗봇 페이지로 전달
+          this.$router.push({ name: 'chatbotpage', query: { keywords: response.data.keywords } })
+        } catch (error) {
+          console.error('Error extracting keywords:', error)
+        } finally {
+          this.loading = false
         }
-      })
-
-      console.log('Extracted Text:', response.data.extractedText) // 응답 데이터에서 텍스트 확인
-      console.log('Keywords:', response.data.keywords) // 키워드 확인
-
-      // 키워드를 챗봇 페이지로 전달
-      router.push({ name: 'chatbotpage', query: { keywords: response.data.keywords } })
-    } catch (error) {
-      console.error('Error extracting keywords:', error)
-    } finally {
-      loading.value = false
+      }
     }
   }
 }
