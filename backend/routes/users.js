@@ -7,42 +7,29 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/join", async function (req, res) {
-  if (!req.body.id || !req.body.password || !req.body.name || !req.body.birthDate || !req.body.email || !req.body.phoneNumber) {
-    console.log({
-      result: "fail",
-      message: "입력란을 모두 입력해주세요."
-    });
-    res.json({
-      result: "fail",
-      message: "입력란을 모두 입력해주세요."
-    });
-    return;
-  }
-  if (req.body.isOver15 === false || req.body.termsAgreement === false || req.body.privacyAgreement === false) {
-    console.log({
-      result: "fail",
-      message: "필수 체크란을 모두 체크해주세요."
-    });
-    res.json({
-      result: "fail",
-      message: "필수 체크란을 모두 체크해주세요."
-    });
-    return;
-  }
-
   var checkUser = await sequelize.models.user.findOne({
     where: {
       id: req.body.id
     }
   });
   if (checkUser) {
-    console.log({
-      result: "fail",
-      message: "이미 가입된 아이디입니다."
-    });
     res.json({
       result: "fail",
+      field: "id",
       message: "이미 가입된 아이디입니다."
+    });
+    return;
+  }
+  var checkEmail = await sequelize.models.user.findOne({
+    where: {
+      email: req.body.email
+    }
+  });
+  if (checkEmail) {
+    res.json({
+      result: "fail",
+      field: "email",
+      message: "이미 가입된 이메일입니다."
     });
     return;
   }
