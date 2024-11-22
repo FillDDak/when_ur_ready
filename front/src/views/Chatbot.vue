@@ -33,9 +33,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { ref } from 'vue'; // ref는 기본 값 또는 객체를 감싸서 반응형 데이터 생성
+import { useRouter } from 'vue-router'; // 현재 라우터 인스턴스에 접근하고, 페이지 간 네비게이션을 제어
+import axios from 'axios'; // HTTP 요청을 보내기 위한 라이브러리
 
 const router = useRouter();
 const companyUrl = ref('');
@@ -45,21 +45,17 @@ const submitUrl = async () => {
   if (companyUrl.value.trim() !== '') {
     loading.value = true;
     try {
-      // 백엔드에 URL 전달하여 키워드 및 질문을 생성 요청
+      // 백엔드에 URL 전달하여 키워드 및 질문 생성 요청
       const response = await axios.post('http://localhost:4000/generate-questions', { url: companyUrl.value });
 
-      // 응답 데이터 로깅
+      // 응답 데이터 로깅 및 처리
       console.log(response.data);
-
-      // 서버에서 반환하는 데이터 구조 확인 후 저장
       if (response.data && response.data.keywordsAndQuestions) {
         localStorage.setItem('keywordsAndQuestions', JSON.stringify(response.data.keywordsAndQuestions));
+        router.push('/chatbotpage'); // 페이지 이동
       } else {
         throw new Error("응답 데이터에 키워드와 질문 정보가 없습니다.");
       }
-
-      // 페이지 이동
-      router.push('/chatbotpage');
     } catch (error) {
       console.error("키워드 및 질문 생성 오류:", error);
       alert("키워드 및 질문 생성 중 오류가 발생했습니다.");
@@ -69,9 +65,5 @@ const submitUrl = async () => {
   } else {
     alert("회사의 URL을 입력해주세요.");
   }
-}
+};
 </script>
-
-<style scoped>
-.text-muted { color: #6c757d; }
-</style>

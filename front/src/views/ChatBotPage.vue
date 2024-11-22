@@ -1,11 +1,6 @@
 <template>
   <v-container class="pa-4">
     <v-row justify="center" class="mb-4">
-      <!-- 로고 또는 기타 요소가 여기에 올 수 있습니다 -->
-    </v-row>
-
-    <!-- 챗봇 메시지 영역 -->
-    <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-card class="chat-window">
           <v-card-text>
@@ -20,7 +15,6 @@
       </v-col>
     </v-row>
 
-    <!-- 사용자 입력 및 전송 버튼 -->
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6">
         <v-text-field 
@@ -41,7 +35,6 @@
       </v-col>
     </v-row>
 
-    <!-- 뒤로가기 버튼 -->
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="8" md="6" class="text-center">
         <v-btn @click="$router.go(-1)" color="grey" outlined>
@@ -49,17 +42,30 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <!-- 키워드 출력 -->
+    <v-row justify="center" class="mt-4">
+      <v-col cols="12" sm="8" md="6" class="text-center">
+        <p>키워드: {{ keywords }}</p>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, onUpdated } from 'vue'
+import { ref, onMounted, onUpdated } from 'vue';
+import { useRoute } from 'vue-router';
 
-const messages = ref([{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }])
-const userInput = ref('')
+const messages = ref([{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }]);
+const userInput = ref('');
+const keywords = ref('');
+const route = useRoute();
 
-// 로컬 스토리지에서 키워드 및 예상 질문 불러오기
+// 컴포넌트가 마운트될 때 키워드를 받아옴
 onMounted(() => {
+  keywords.value = route.query.keywords || '키워드가 없습니다.';
+
+  // 로컬 스토리지에서 키워드 및 예상 질문 불러오기
   const storedData = localStorage.getItem('keywordsAndQuestions');
   if (storedData) {
     const keywordsAndQuestions = JSON.parse(storedData);
@@ -78,14 +84,14 @@ onMounted(() => {
 const sendMessage = () => {
   if (userInput.value.trim() !== '') {
     messages.value.push({ id: messages.value.length + 1, sender: '나', text: userInput.value });
-    userInput.value = ''; // 입력 필드 비우기
-    
+    userInput.value = '';
+
     // 챗봇의 간단한 응답을 추가
     setTimeout(() => {
       messages.value.push({ id: messages.value.length + 1, sender: '면접도우미', text: '질문에 대한 답변을 준비하고 있습니다!' });
     }, 1000);
   }
-}
+};
 
 // 새 메시지가 추가될 때 자동 스크롤
 onUpdated(() => {
@@ -93,7 +99,7 @@ onUpdated(() => {
   if (chatWindow) {
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
-})
+});
 </script>
 
 <style scoped>
@@ -124,7 +130,7 @@ onUpdated(() => {
 }
 
 .user-message .message-content {
-  background-color: #808080; /* 그레이 색상 */
+  background-color: #808080; 
   color: white;
 }
 </style>

@@ -22,7 +22,6 @@ var sequelize = new Sequelize("", "root", "123456", {
 // MySQL2 Workbench에서 쿼리 생성 > 아래 코드 입력 > ctrl + enter
 // ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
 
-// 스키마가 없으면 생성
 sequelize.query("CREATE DATABASE IF NOT EXISTS `when_ur_ready` CHARACTER SET utf8mb4;")
   .then(() => {
     // 데이터베이스 사용 설정 (재연결)
@@ -67,6 +66,7 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 라우터 연결
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

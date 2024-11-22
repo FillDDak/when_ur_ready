@@ -7,42 +7,29 @@ router.get('/', function (req, res, next) {
 });
 
 router.post("/join", async function (req, res) {
-  if (!req.body.id || !req.body.password || !req.body.name || !req.body.birthDate || !req.body.email || !req.body.phoneNumber) {
-    console.log({
-      result: "fail",
-      message: "입력란을 모두 입력해주세요."
-    });
-    res.json({
-      result: "fail",
-      message: "입력란을 모두 입력해주세요."
-    });
-    return;
-  }
-  if (req.body.isOver15 === false || req.body.termsAgreement === false || req.body.privacyAgreement === false) {
-    console.log({
-      result: "fail",
-      message: "필수 체크란을 모두 체크해주세요."
-    });
-    res.json({
-      result: "fail",
-      message: "필수 체크란을 모두 체크해주세요."
-    });
-    return;
-  }
-
   var checkUser = await sequelize.models.user.findOne({
     where: {
       id: req.body.id
     }
   });
   if (checkUser) {
-    console.log({
-      result: "fail",
-      message: "이미 가입된 아이디입니다."
-    });
     res.json({
       result: "fail",
+      field: "id",
       message: "이미 가입된 아이디입니다."
+    });
+    return;
+  }
+  var checkEmail = await sequelize.models.user.findOne({
+    where: {
+      email: req.body.email
+    }
+  });
+  if (checkEmail) {
+    res.json({
+      result: "fail",
+      field: "email",
+      message: "이미 가입된 이메일입니다."
     });
     return;
   }
@@ -53,32 +40,42 @@ router.post("/join", async function (req, res) {
 });
 
 router.post("/login", async function (req, res) {
-  if (!req.body.id || !req.body.password) {
-    console.log({
-      result: "fail",
-      message: "아이디와 비밀번호를 입력해주세요."
-    });
+  if (!req.body.id) {
     res.json({
       result: "fail",
-      message: "아이디와 비밀번호를 입력해주세요."
+      field: "id",
+      message: "아이디를 입력해주세요."
+    });
+    return;
+  }
+
+  if (!req.body.password) {
+    res.json({
+      result: "fail",
+      field: "password",
+      message: "비밀번호를 입력해주세요."
     });
     return;
   }
 
   var checkUser = await sequelize.models.user.findOne({
     where: {
-      id: req.body.id,
-      password: req.body.password
+      id: req.body.id
     }
   });
   if (!checkUser) {
-    console.log({
-      result: "fail",
-      message: "아이디 또는 패스워드가 틀렸습니다."
-    });
     res.json({
       result: "fail",
-      message: "아이디 또는 패스워드가 틀렸습니다."
+      field: "id",
+      message: "존재하지 않는 아이디입니다."
+    });
+    return;
+  }
+  if (checkUser.password !== req.body.password) {
+    res.json({
+      result: "fail",
+      field: "password",
+      message: "비밀번호가 틀렸습니다."
     });
     return;
   }

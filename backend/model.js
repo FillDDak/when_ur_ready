@@ -63,6 +63,10 @@ function model(Sequelize, connection) {
             type: Sequelize.BOOLEAN,
             defaultValue: false
         },
+        profileImagePath: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         joinDate: {
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW
