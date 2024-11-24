@@ -10,7 +10,7 @@ import ChatBotPage from '@/views/ChatBotPage.vue';
 import Example from '../views/Example.vue';
 import About from '../views/About.vue';
 import QuestionsPage from "@/views/QuestionsPage.vue";
-import FeedbackPage from "@/views/FeedbackPage.vue"; 
+import FeedbackPage from "@/views/FeedbackPage.vue"; // 피드백 페이지 임포트
 
 const routes = [
   {
@@ -65,7 +65,7 @@ const routes = [
   },
   {
     path: "/questions", 
-    name: "questions", 
+    name: "questionspage", 
     component: QuestionsPage,
   },
   {
