@@ -1,6 +1,6 @@
 <template>
   <v-container class="pa-4">
-    <!-- 타이틀 및 설명 -->
+    
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6" class="text-center">
         <h1 class="mb-2">면접 1타 코칭 강사</h1>
@@ -8,7 +8,7 @@
       </v-col>
     </v-row>
 
-    <!-- 키워드 표시 -->
+    
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <h2>추출된 키워드:</h2>
@@ -24,7 +24,7 @@
       </v-col>
     </v-row>
 
-    <!-- 버튼 영역 -->
+    
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6" class="text-center">
         <v-btn color="primary" class="ma-2" @click="generateQuestions">예상 질문 뽑기</v-btn>
@@ -35,7 +35,7 @@
       </v-col>
     </v-row>
 
-    <!-- 로딩 애니메이션 표시 -->
+   
     <v-row justify="center" v-if="isLoading">
       <v-col cols="12" sm="8" md="6" class="text-center">
         <p>예상 질문 생성중...</p>
@@ -52,17 +52,17 @@ import axios from "axios";
 export default {
   data() {
     return {
-      keywords: [], // 키워드 데이터
-      isLoading: false, // 로딩 상태
+      keywords: [], 
+      isLoading: false, 
     };
   },
   mounted() {
     const route = useRoute();
 
-    // URL에서 전달된 쿼리 파라미터 받아오기
+    
     const keywordsQuery = route.query.keywords;
 
-    // keywords가 있으면 JSON 파싱하여 keywords 배열에 저장
+    
     if (keywordsQuery) {
       try {
         let parsedKeywords = JSON.parse(decodeURIComponent(keywordsQuery)); // 디코딩 후 JSON 파싱
