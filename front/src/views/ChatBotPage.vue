@@ -69,7 +69,7 @@ export default {
         this.keywords = parsedKeywords.content.split("\n").map(item => item.replace(/^\d+\.\s*/, ""));
       } catch (error) {
         console.error("키워드 파싱 오류:", error);
-        this.keywords = []; // 오류 시 기본값
+        this.keywords = []; 
       }
     }
   },
