@@ -34,26 +34,47 @@ router.post("/check", upload.single("file"), async (req, res) => {
   const filePath = req.file.path;
   const mimeType = req.file.mimetype;
   try {
-    let text = "";
+    let extractedText = "";
 
     if (mimeType === "application/pdf") {
       // PDF 파일 텍스트 추출
       const dataBuffer = fs.readFileSync(filePath);
       const pdfData = await pdfParse(dataBuffer);
-      text = pdfData.text;
+      extractedText = pdfData.text;
 
     } else if (mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
       // DOCX 파일 텍스트 추출
       const result = await mammoth.extractRawText({ path: filePath });
-      text = result.value;
+      extractedText = result.value;
 
     } else {
       throw new Error("지원하지 않는 파일 형식입니다.");
     }
 
+    console.log("추출된 텍스트:", extractedText)
+
+    const formattedTextResponse = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: "다음 텍스트를 내용 변화는 없이 그대로 유지하지만 가독성이 좋게만 수정하여 다음 양식에 맞게 출력해줘. response json format={ originalText:'string' }"
+        },
+        {
+          role: "user",
+          content: extractedText
+        }
+      ]
+    });
+
+    var formattedText = formattedTextResponse.choices[0].message
+    console.log("정리한 텍스트:", formattedText)
+    
+    var json = JSON.parse(formattedText.content)
+
     // 추출된 텍스트 응답으로 반환
-    res.json({ extractedText: text });
-    console.log(text)
+    res.json(json)
+
   } catch (error) {
     console.error("OCR 또는 OpenAI 처리 중 오류 발생", error);
     res.status(500).json({ error: "파일 처리 중 오류가 발생했습니다." });

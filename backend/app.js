@@ -15,7 +15,8 @@ var { Sequelize } = require('sequelize');
 // 초기 연결 (데이터베이스 없이)
 var sequelize = new Sequelize("", "root", "123456", {
   host: "localhost",
-  dialect: "mysql" // 데이터베이스에 맞는 SQL문 연결
+  dialect: "mysql", // 데이터베이스에 맞는 SQL문 연결
+  logging: false // Sequelize 로깅을 비활성화하거나 필요한 부분만 출력하도록 설정
 });
 
 // MySQL2 root 비밀번호 변경 방법 (비번: 123456)
@@ -27,7 +28,8 @@ sequelize.query("CREATE DATABASE IF NOT EXISTS `when_ur_ready` CHARACTER SET utf
     // 데이터베이스 사용 설정 (재연결)
     sequelize = new Sequelize("when_ur_ready", "root", "123456", {
       host: "localhost",
-      dialect: "mysql"
+      dialect: "mysql",
+      logging: false // Sequelize 로깅을 비활성화하거나 필요한 부분만 출력하도록 설정
     });
     global.sequelize = sequelize; // 전역 변수 선언
     require("./model")(Sequelize, sequelize); // 모델 불러오기 및 데이터베이스 모델 정의
