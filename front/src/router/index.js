@@ -10,7 +10,7 @@ import ChatBotPage from '@/views/ChatBotPage.vue';
 import Example from '../views/Example.vue';
 import About from '../views/About.vue';
 import QuestionsPage from "@/views/QuestionsPage.vue";
-import FeedbackPage from "@/views/FeedbackPage.vue"; // 피드백 페이지 임포트
+import FeedbackPage from "@/views/FeedbackPage.vue"; 
 
 const routes = [
   {
@@ -69,11 +69,11 @@ const routes = [
     component: QuestionsPage,
   },
   {
-    path: "/feedback",  // 피드백 페이지의 경로 추가
-    name: "feedback",   // 피드백 페이지 이름 설정
-    component: FeedbackPage,  // 피드백 페이지 컴포넌트 설정
+    path: "/feedback",  
+    name: "feedback",   
+    component: FeedbackPage,  
     props: route => ({
-      feedbackId: route.query.feedbackId,  // 쿼리 파라미터에서 feedbackId를 가져옴
+      feedbackId: route.query.feedbackId, 
     }),
   },
 ];
