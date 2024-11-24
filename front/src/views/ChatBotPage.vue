@@ -1,126 +1,135 @@
 <template>
   <v-container class="pa-4">
-    <v-row justify="center" class="mb-4">
-      <v-col cols="12" sm="8" md="6">
-        <v-card class="chat-window">
-          <v-card-text>
-            <div v-for="message in messages" :key="message.id" :class="['message', message.sender === '나' ? 'user-message' : 'bot-message']">
-              <div class="message-content">
-                <span class="sender">{{ message.sender }}:</span>
-                <span class="text">{{ message.text }}</span>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6">
-        <v-text-field 
-          v-model="userInput" 
-          label="메시지를 입력하세요" 
-          @keyup.enter="sendMessage" 
-          outlined
-          dense
-        />
-        <v-btn 
-          @click="sendMessage" 
-          class="mt-2" 
-          block 
-          :style="{ backgroundColor: '#000000', color: 'white' }"
-        >
-          전송
-        </v-btn>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center" class="mt-4">
+    <!-- 타이틀 및 설명 -->
+    <v-row justify="center">
       <v-col cols="12" sm="8" md="6" class="text-center">
-        <v-btn @click="goBack" color="grey" outlined>
-          뒤로가기
-        </v-btn>
+        <h1 class="mb-2">면접 1타 코칭 강사</h1>
+        <p>AI를 활용한 맞춤형 면접 준비 프로그램</p>
       </v-col>
     </v-row>
 
-    <!-- 키워드 출력 -->
-    <v-row justify="center" class="mt-4">
+    <!-- 키워드 표시 -->
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <h2>추출된 키워드:</h2>
+        <div class="d-flex flex-wrap mb-4">
+          <v-chip
+            v-for="(keyword, index) in keywords"
+            :key="index"
+            class="custom-chip"
+          >
+            {{ keyword }}
+          </v-chip>
+        </div>
+      </v-col>
+    </v-row>
+
+    <!-- 버튼 영역 -->
+    <v-row justify="center">
       <v-col cols="12" sm="8" md="6" class="text-center">
-        <p>키워드: {{ keywords }}</p>
+        <v-btn color="primary" class="ma-2" @click="generateQuestions">예상 질문 뽑기</v-btn>
+        <v-btn color="secondary" class="ma-2">회사 관련 질문 뽑기</v-btn>
+        <p class="mt-3 text-caption">
+          참고: 이 도구는 AI를 사용하여 면접 준비를 돕습니다. 실제 면접 질문 및 최적의 답변은 다를 수 있습니다.
+        </p>
+      </v-col>
+    </v-row>
+
+    <!-- 로딩 애니메이션 표시 -->
+    <v-row justify="center" v-if="isLoading">
+      <v-col cols="12" sm="8" md="6" class="text-center">
+        <p>예상 질문 생성중...</p>
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { ref, onMounted, onUpdated } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      messages: [{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }],
-      userInput: '',
-      keywords: ''
-    }
+      keywords: [], // 키워드 데이터
+      isLoading: false, // 로딩 상태
+    };
   },
   mounted() {
-    const route = useRoute()
-    // URL에서 키워드를 가져와서 표시
-    this.keywords = route.query.keywords || '키워드가 없습니다.'
+    const route = useRoute();
+
+    // URL에서 전달된 쿼리 파라미터 받아오기
+    const keywordsQuery = route.query.keywords;
+
+    // keywords가 있으면 JSON 파싱하여 keywords 배열에 저장
+    if (keywordsQuery) {
+      try {
+        let parsedKeywords = JSON.parse(decodeURIComponent(keywordsQuery)); // 디코딩 후 JSON 파싱
+        this.keywords = parsedKeywords.content.split("\n").map(item => item.replace(/^\d+\.\s*/, ""));
+      } catch (error) {
+        console.error("키워드 파싱 오류:", error);
+        this.keywords = []; // 오류 시 기본값
+      }
+    }
   },
   methods: {
-    sendMessage() {
-      if (this.userInput.trim() !== '') {
-        this.messages.push({ id: this.messages.length + 1, sender: '나', text: this.userInput })
-        this.userInput = '' 
-        setTimeout(() => {
-          this.messages.push({ id: this.messages.length + 1, sender: '면접도우미', text: '메시지를 받았습니다!' })
-        }, 1000)
+    async generateQuestions() {
+      try {
+        this.isLoading = true; // 로딩 시작
+
+        // 서버에 요청을 보내 예상 질문을 생성
+        const response = await axios.post("http://localhost:3000/generate-questions", {
+          keywords: this.keywords, // 키워드 전송
+        });
+
+        // 로딩 완료 후 새 페이지로 예상 질문 전달
+        this.isLoading = false;
+        this.$router.push({
+          name: "questions", // 라우터의 이름을 사용하여 페이지 이동
+          query: { questions: JSON.stringify(response.data.questions) }, // 예상 질문을 쿼리 파라미터로 전달
+        });
+      } catch (error) {
+        this.isLoading = false;
+        console.error("예상 질문 생성 오류:", error);
+        alert("예상 질문을 생성하는 데 실패했습니다.");
       }
     },
-    goBack() {
-      this.$router.go(-1)
-    }
   },
-  updated() {
-    const chatWindow = document.querySelector('.chat-window .v-card__text')
-    if (chatWindow) {
-      chatWindow.scrollTop = chatWindow.scrollHeight
-    }
-  }
-}
+};
 </script>
 
 <style scoped>
-.chat-window {
-  height: 400px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
+.text-center {
+  text-align: center;
 }
-
-.message {
+.ma-2 {
+  margin: 8px;
+}
+.mb-2 {
+  margin-bottom: 16px;
+}
+.mb-4 {
+  margin-bottom: 32px;
+}
+.text-caption {
+  font-size: 0.8rem;
+  color: #757575;
+}
+.d-flex {
   display: flex;
-  margin-bottom: 10px;
 }
-
-.user-message {
-  justify-content: flex-end;
+.flex-wrap {
+  flex-wrap: wrap;
 }
-
-.bot-message {
-  justify-content: flex-start;
-}
-
-.message-content {
-  max-width: 80%;
-  padding: 10px 15px;
-  border-radius: 15px;
-  background-color: #e0e0e0;
-}
-
-.user-message .message-content {
-  background-color: #808080; 
-  color: white;
+.custom-chip {
+  background-color: #000; /* 검정색 배경 */
+  color: #fff; /* 흰색 글자 */
+  border-radius: 20px; /* 동글한 모서리 */
+  padding: 0 10px; /* 내부 여백 조정 */
+  margin: 6px 5px; /* 외부 마진 조정 */
+  font-size: 1rem;
+  font-weight: bold;
+  white-space: nowrap; /* 텍스트가 길어지지 않도록 방지 */
 }
 </style>
