@@ -1,4 +1,4 @@
-\<template>
+<template>
   <v-container>
     <h2>면접 1타 코칭 강사</h2>
     <p>AI를 활용한 맞춤형 면접 준비 프로그램</p><br>

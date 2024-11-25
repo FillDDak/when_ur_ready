@@ -1,111 +1,151 @@
 <template>
-  <v-container class="pa-4">
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6" class="text-center">
-        <h1 class="mb-2">면접 1타 코칭 강사</h1>
-        <p>AI를 활용한 맞춤형 면접 준비 프로그램</p>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6">
-        <h2>추출된 키워드:</h2>
-        <div class="d-flex flex-wrap mb-4">
-          <v-chip
-            v-for="(keyword, index) in keywords"
-            :key="index"
-            class="custom-chip"
-          >
-            {{ keyword }}
-          </v-chip>
-        </div>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6" class="text-center">
-        <v-btn color="primary" class="ma-2" @click="goToQuestionsPage">예상 질문 뽑기</v-btn>
-        <v-btn color="secondary" class="ma-2">회사 관련 질문 뽑기</v-btn>
-        <p class="mt-3 text-caption">
-          참고: 이 도구는 AI를 사용하여 면접 준비를 돕습니다. 실제 면접 질문 및 최적의 답변은 다를 수 있습니다.
-        </p>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="chatbot-container">
+    <h2>추출된 키워드:</h2>
+    <div class="keywords-container">
+      <span v-for="(keyword, index) in keywordsArray" :key="index" class="keyword-box">
+        {{ keyword }}
+      </span>
+    </div>
+    <div class="buttons-container">
+      <button @click="generateQuestions('predict')" class="btn btn-primary" :disabled="loading">
+        <span v-if="!loading">예상 질문 뽑기</span>
+        <span v-else>예상 질문 뽑기 중...</span>
+      </button>
+      <button @click="generateQuestions('company')" class="btn btn-secondary" :disabled="loading">
+        회사 관련 질문 뽑기
+      </button>
+    </div>
+    <p class="note">참고: 이 도구는 AI를 사용하여 면접 준비를 돕습니다. 실제 면접 질문 및 최적의 답변은 다를 수 있습니다.</p>
+    <!-- 로딩 애니메이션이 이 위치에 표시됩니다. -->
+    <div v-if="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <span>질문 생성중...</span>
+    </div>
+  </div>
 </template>
 
 <script>
-import { useRouter } from "vue-router";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      keywords: [], 
+      keywords: "",  // keywords는 문자열로 시작
+      keywordsArray: [],  // keywords를 배열로 처리
+      loading: false,
     };
   },
   mounted() {
-    const route = this.$route;
-    const keywordsQuery = route.query.keywords;
-
-    if (keywordsQuery) {
+    const query = this.$route.query.keywords;
+    if (query) {
       try {
-        let parsedKeywords = JSON.parse(decodeURIComponent(keywordsQuery));
-        const uniqueKeywords = [...new Set(parsedKeywords.content.split('\n').map(item => item.replace(/^\d+\.\s*/, '')))];
-        this.keywords = uniqueKeywords.filter(keyword => keyword.trim() !== '');
+        const parsedKeywords = JSON.parse(decodeURIComponent(query));
+        if (parsedKeywords.content) {
+          this.keywords = parsedKeywords.content;
+          this.keywordsArray = this.keywords.split(",").map((keyword) => keyword.trim()); // 문자열을 배열로 변환
+        }
       } catch (error) {
-        console.error("키워드 파싱 오류:", error);
-        this.keywords = [];
+        console.error("Invalid keywords format:", error);
       }
     }
   },
   methods: {
-    goToQuestionsPage() {
-      const questions = this.generateQuestionsFromKeywords(this.keywords);
-      this.$router.push({
-        name: 'questionspage',
-        query: { questions: encodeURIComponent(JSON.stringify(questions)) }
-      });
+    async generateQuestions(type) {
+      this.loading = true;
+
+      try {
+        const response = await axios.post("http://localhost:3000/generate-questions", {
+          type,
+          keywords: this.keywordsArray,  // keywordsArray로 배열 전달
+        });
+
+        // 질문 생성 성공 시 다음 페이지로 이동
+        const questions = encodeURIComponent(JSON.stringify(response.data.questions));
+        this.$router.push({ path: "/questions", query: { questions } });
+      } catch (error) {
+        console.error("질문 생성 중 오류 발생:", error);
+        alert("질문을 생성하는 데 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        this.loading = false;
+      }
     },
-    generateQuestionsFromKeywords(keywords) {
-      return keywords.map(keyword => `${keyword}에 대해 말씀해 주세요.`);
-    }
-  }
+  },
 };
 </script>
 
 <style scoped>
-.custom-chip {
-  background-color: #f0f0f0;
-  margin: 4px;
+.chatbot-container {
+  text-align: center;
+  margin: 20px;
+}
+
+.keywords-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.keyword-box {
+  background-color: #000;
+  color: #fff;
+  border-radius: 15px;
+  padding: 10px 15px;
   font-size: 14px;
-  padding: 6px 12px;
-}
-
-.v-btn {
   font-weight: bold;
+  display: inline-block;
 }
 
-.text-caption {
-  font-size: 0.875rem;
-  color: #757575;
+.buttons-container {
+  margin: 20px;
 }
 
-h1 {
-  font-size: 2rem;
-  color: #3f51b5;
+.btn {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-h2 {
-  color: #333;
-  font-size: 1.25rem;
-  margin-bottom: 8px;
+.btn-primary {
+  background-color: #007bff;
+  color: white;
 }
 
-p {
-  font-size: 1rem;
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
 }
 
-.v-row {
+.note {
+  font-size: 12px;
+  color: gray;
   margin-top: 20px;
+}
+
+/* 로딩 애니메이션 스타일 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #38dbdb;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+/* 로딩 애니메이션 회전 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

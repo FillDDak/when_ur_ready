@@ -17,7 +17,15 @@
             @click="selectQuestion(question)"
             class="question-item"
           >
-            {{ question }}
+            <span>{{ question }}</span>
+            <!-- 즐겨찾기 별 아이콘 추가 -->
+            <v-icon
+              :color="isFavorite(question) ? 'yellow' : 'grey'"
+              @click.stop="toggleFavorite(question)"
+              class="favorite-icon"
+            >
+              mdi-star
+            </v-icon>
           </li>
         </ul>
       </v-col>
@@ -58,7 +66,7 @@
         <!-- 분석된 피드백 표시 -->
         <div v-if="loading">
           <div class="loading-container">
-            <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+            <v-progress-circular indeterminate color="primary" size="32"></v-progress-circular>
             <p>답변 분석중...</p>
           </div>
         </div>
@@ -97,6 +105,7 @@ export default {
       answer: "", // 답변 입력값
       loading: false, // 로딩 상태
       feedback: null, // 분석된 피드백
+      favorites: [], // 즐겨찾기 목록
     };
   },
   mounted() {
@@ -107,6 +116,10 @@ export default {
     if (questionsQuery) {
       this.questions = JSON.parse(decodeURIComponent(questionsQuery)); // JSON 파싱하여 배열로 저장
     }
+
+    // 로컬 저장소에서 즐겨찾기 목록을 불러오기
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+    this.favorites = savedFavorites;
   },
   methods: {
     // 질문 선택 시 해당 질문을 selectedQuestion에 저장하고 피드백 초기화
@@ -128,7 +141,7 @@ export default {
       try {
         // API 요청을 보내서 AI 피드백을 받음
         const response = await axios.post("http://localhost:3000/analyze-answer", {
-          answer: this.answer,
+          answer: this.answer, // 답변을 그대로 전달
         });
 
         // 로컬 저장소에 피드백 저장
@@ -140,6 +153,25 @@ export default {
         // 분석 완료 후 로딩 상태 종료
         this.loading = false;
       }
+    },
+
+    // 즐겨찾기 여부 확인
+    isFavorite(question) {
+      return this.favorites.includes(question);
+    },
+
+    // 즐겨찾기 토글 (추가 / 제거)
+    toggleFavorite(question) {
+      if (this.isFavorite(question)) {
+        // 즐겨찾기에서 제거
+        this.favorites = this.favorites.filter(item => item !== question);
+      } else {
+        // 즐겨찾기에 추가
+        this.favorites.push(question);
+      }
+
+      // 로컬 저장소에 저장
+      localStorage.setItem("favorites", JSON.stringify(this.favorites));
     },
 
     // 피드백을 단락별로 나누는 메서드
@@ -179,11 +211,18 @@ export default {
   margin: 10px 0;
   cursor: pointer;
   color: #000000;
-  text-decoration: underline;
+  display: flex;
+  justify-content: space-between; /* 텍스트와 아이콘을 양쪽에 배치 */
+  align-items: center;
 }
 
 .question-item:hover {
   color: #1565c0;
+}
+
+.favorite-icon {
+  cursor: pointer;
+  font-size: 1.3rem; /* 아이콘 크기 조정 */
 }
 
 .mt-4 {

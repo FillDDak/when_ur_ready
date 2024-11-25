@@ -10,7 +10,9 @@ import ChatBotPage from '@/views/ChatBotPage.vue';
 import Example from '../views/Example.vue';
 import About from '../views/About.vue';
 import QuestionsPage from "@/views/QuestionsPage.vue";
-import FeedbackPage from "@/views/FeedbackPage.vue"; // 피드백 페이지 임포트
+import FeedbackPage from "@/views/FeedbackPage.vue"; 
+import PredictQuestions from '../views/PredictQuestions.vue'; 
+import CompanyQuestions from '../views/CompanyQuestions.vue';
 
 const routes = [
   {
@@ -65,7 +67,7 @@ const routes = [
   },
   {
     path: "/questions", 
-    name: "questionspage", 
+    name: "questions", 
     component: QuestionsPage,
   },
   {
@@ -75,6 +77,16 @@ const routes = [
     props: route => ({
       feedbackId: route.query.feedbackId, 
     }),
+  },
+  {
+    path: '/predict-questions',
+    name: 'predict-questions',
+    component: PredictQuestions,
+  },
+  {
+    path: '/company-questions',
+    name: 'company-questions',
+    component: CompanyQuestions,
   },
 ];
 
