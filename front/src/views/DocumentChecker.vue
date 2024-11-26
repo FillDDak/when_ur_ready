@@ -1,8 +1,9 @@
 <template>
-  <v-app class="background-image">
+  <v-app>
     <v-container>
       <v-row justify="center">
         <v-col cols="12" md="6">
+          <!-- 파일 업로드 -->
           <v-card class="pa-5">
             <v-card-title>자기소개서 검토</v-card-title>
             <v-card-text>
@@ -11,79 +12,70 @@
                 label="파일 업로드"
                 prepend-icon="mdi-upload"
                 @change="changeFile"
-                accept=".pdf, .pdfx, .doc, .docx, .txt"
+                accept=".pdf, .doc, .docx, .txt"
                 outlined
                 dense
-              >
-              </v-file-input>
+              />
             </v-card-text>
           </v-card>
 
-          <v-row
-            justify="center"
-            align="center"
-            v-if="loading"
-            style="min-height: 600px"
-          >
-            <v-col cols="auto">
-              <v-progress-circular
-                indeterminate
-                color="primary"
-                size="70"
-              ></v-progress-circular>
-            </v-col>
+          <!-- 로딩 중 -->
+          <v-row justify="center" v-if="loading">
+            <v-progress-circular indeterminate color="primary" size="70" />
           </v-row>
 
-          <v-card class="mt-4" v-if="checkup && !loading">
-            <v-card-title class="text-center"
-              >자기소개서 검토 결과</v-card-title
-            >
+          <!-- 추출된 텍스트 -->
+          <v-card class="mt-4" v-if="originalText && !loading">
+            <v-card-title>추출된 텍스트</v-card-title>
             <v-card-text>
-              <v-alert
-                title="자기소개서 추출 결과"
-                type="success"
-                variant="tonal"
-                v-if="checkup"
-                class="mb-3"
-              >
-              </v-alert>
-              <v-expansion-panels style="white-space: pre-wrap; line-height: 1.5">
-                {{ checkup }}
-              </v-expansion-panels>
+              <pre style="white-space: pre-wrap;">{{ originalText }}</pre>
+            </v-card-text>
+          </v-card>
 
+          <!-- 분석 결과 -->
+          <v-card class="mt-4" v-if="!analyzing && propensity">
+            <v-card-title>분석 결과</v-card-title>
+            <v-card-text>
               <v-row>
-                <v-col cols="12">
-                  <strong>내 성향:</strong> {{ contract_period }}
-                </v-col>
-                <v-col cols="12">
-                  <strong>내 역량:</strong> {{ work_location }}
-                </v-col>
-                <v-col cols="12">
-                  <strong>내 장/단점:</strong> {{ job_content }}
-                </v-col>
-                <v-col cols="12">
-                  <strong>내 역할:</strong> {{ work_hours }}
-                </v-col>
+                <v-col cols="12"><strong>내 성향:</strong> {{ propensityPresence }}</v-col>
+                <v-col cols="12">{{ propensity }}</v-col>
+                <v-col cols="12"><strong>내 역량:</strong> {{ capabilitiesPresence }}</v-col>
+                <v-col cols="12">{{ capabilities }}</v-col>
+                <v-col cols="12"><strong>내 장/단점:</strong> {{ prosandconsPresence }}</v-col>
+                <v-col cols="12">{{ prosandcons }}</v-col>
+                <v-col cols="12"><strong>내 역할:</strong> {{ rolePresence }}</v-col>
+                <v-col cols="12">{{ role }}</v-col>
               </v-row>
             </v-card-text>
           </v-card>
+
+          <!-- 분석 진행 중 -->
+          <v-row justify="center" v-if="analyzing">
+            <v-progress-circular indeterminate color="green" size="50" />
+          </v-row>
         </v-col>
       </v-row>
     </v-container>
   </v-app>
 </template>
 
+
 <script>
 export default {
   data() {
     return {
       file: null,
-      checkup: null,
-      contract_period: null,
-      work_location: null,
-      job_content: null,
-      work_hours: null,
+      originalText: null,
+      propensityPresence: null,
+      capabilitiesPresence: null,
+      prosandconsPresence: null,
+      rolePresence: null,
+      propensity: null,
+      capabilities: null,
+      prosandcons: null,
+      role: null,
       loading: false,
+      analyzing: false,
     };
   },
   methods: {
@@ -95,32 +87,42 @@ export default {
 
       this.loading = true;
       try {
-        var response = await this.$axios.post(
-          "/api/check",
-          {
-            file: this.file,
-          },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response.data);
+        // 1. 텍스트 추출 요청
+        const formData = new FormData();
+        formData.append("file", this.file);
 
-        this.checkup = response.data.originalText;
-        this.contract_period = response.data.contract_period;
-        this.work_location = response.data.work_location;
-        this.job_content = response.data.job_content;
-        this.work_hours = response.data.work_hours;
+        const response = await this.$axios.post("/api/check", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        // 추출된 텍스트 표시
+        this.originalText = response.data.originalText;
+
+        // 2. 추가 분석 요청
+        this.analyzing = true;
+        const analysisResponse = await this.$axios.get("/api/analyze", {
+          params: { text: this.originalText },
+        });
+
+        // 분석 결과 반영
+        this.propensityPresence = analysisResponse.data.propensityPresence;
+        this.capabilitiesPresence = analysisResponse.data.capabilitiesPresence;
+        this.prosandconsPresence = analysisResponse.data.prosAndConsPresence;
+        this.rolePresence = analysisResponse.data.rolePresence;
+        this.propensity = analysisResponse.data.propensity;
+        this.capabilities = analysisResponse.data.capabilities;
+        this.prosandcons = analysisResponse.data.prosAndCons;
+        this.role = analysisResponse.data.role;
       } catch (error) {
         console.error("파일 처리 중 오류가 발생했습니다.", error);
       } finally {
         this.loading = false;
+        this.analyzing = false;
       }
     },
   },
 };
+
 </script>
 
 <style>

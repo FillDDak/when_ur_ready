@@ -30,20 +30,19 @@ router.post("/check", upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "파일이 업로드되지 않았습니다." });
   }
-  // MIME 타입과 파일 경로 정의
+
   const filePath = req.file.path;
   const mimeType = req.file.mimetype;
-  try {
-    let extractedText = "";
+  let extractedText = "";
 
+  try {
+    // 텍스트 추출
     if (mimeType === "application/pdf") {
-      // PDF 파일 텍스트 추출
       const dataBuffer = fs.readFileSync(filePath);
       const pdfData = await pdfParse(dataBuffer);
       extractedText = pdfData.text;
 
     } else if (mimeType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      // DOCX 파일 텍스트 추출
       const result = await mammoth.extractRawText({ path: filePath });
       extractedText = result.value;
 
@@ -51,37 +50,59 @@ router.post("/check", upload.single("file"), async (req, res) => {
       throw new Error("지원하지 않는 파일 형식입니다.");
     }
 
-    console.log("추출된 텍스트:", extractedText)
-
-    const formattedTextResponse = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        {
-          role: "system",
-          content: "다음 텍스트를 내용 변화는 없이 그대로 유지하지만 가독성이 좋게만 수정하여 다음 양식에 맞게 출력해줘. response json format={ originalText:'string' }"
-        },
-        {
-          role: "user",
-          content: extractedText
-        }
-      ]
-    });
-
-    var formattedText = formattedTextResponse.choices[0].message
-    console.log("정리한 텍스트:", formattedText)
-    
-    var json = JSON.parse(formattedText.content)
-
-    // 추출된 텍스트 응답으로 반환
-    res.json(json)
+    // 사용자에게 추출된 텍스트 반환
+    res.json({ originalText: extractedText });
 
   } catch (error) {
-    console.error("OCR 또는 OpenAI 처리 중 오류 발생", error);
-    res.status(500).json({ error: "파일 처리 중 오류가 발생했습니다." });
-
+    console.error("텍스트 추출 중 오류 발생:", error);
+    res.status(500).json({ error: "텍스트 추출 중 오류가 발생했습니다." });
   } finally {
-    // 업로드된 임시 파일 삭제
-    fs.unlinkSync(filePath);
+    fs.unlinkSync(filePath); // 업로드된 파일 삭제
+  }
+});
+
+// 분석 작업 엔드포인트
+router.get("/analyze", async (req, res) => {
+  const { text } = req.query;
+
+  if (!text) {
+    return res.status(400).json({ error: "분석할 텍스트가 제공되지 않았습니다." });
+  }
+
+  try {
+    // OpenAI API를 사용하여 텍스트 분석
+    const prompt = `
+      다음 텍스트를 분석하여 아래 항목에 맞는 내용이 있는지 확인하고 있다면 변환 없이 그대로 가져와주며 없다면 따로 표시해줘.:
+      - 내 성향
+      - 내 역량
+      - 내 장/단점
+      - 내 역할
+
+      응답 형식은 JSON이어야 함.:
+      {
+        "propensity": "string",
+        "propensityPresence": "✅내 성향에 대해 작성되어 있음. or ❌작성되어 있지 않음.",
+        "capabilities": "string",
+        "capabilitiesPresence": "✅내 역량에 대해 작성되어 있음. or ❌작성되어 있지 않음.",
+        "prosAndCons": "string",
+        "prosAndConsPresence": "✅내 장/단점에 대해 작성되어 있음. or ❌작성되어 있지 않음.",
+        "role": "string",
+        "rolePresence": "✅내 역할에 대해 작성되어 있음. or ❌작성되어 있지 않음.",
+      }
+      텍스트: ${text}
+    `;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const analysisResult = JSON.parse(response.choices[0].message.content);
+
+    res.json(analysisResult);
+  } catch (error) {
+    console.error("텍스트 분석 중 오류 발생:", error);
+    res.status(500).json({ error: "텍스트 분석 중 오류가 발생했습니다." });
   }
 });
 
