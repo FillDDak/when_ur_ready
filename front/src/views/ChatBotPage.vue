@@ -1,126 +1,151 @@
 <template>
-  <v-container class="pa-4">
-    <v-row justify="center" class="mb-4">
-      <v-col cols="12" sm="8" md="6">
-        <v-card class="chat-window">
-          <v-card-text>
-            <div v-for="message in messages" :key="message.id" :class="['message', message.sender === '나' ? 'user-message' : 'bot-message']">
-              <div class="message-content">
-                <span class="sender">{{ message.sender }}:</span>
-                <span class="text">{{ message.text }}</span>
-              </div>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6">
-        <v-text-field 
-          v-model="userInput" 
-          label="메시지를 입력하세요" 
-          @keyup.enter="sendMessage" 
-          outlined
-          dense
-        />
-        <v-btn 
-          @click="sendMessage" 
-          class="mt-2" 
-          block 
-          :style="{ backgroundColor: '#000000', color: 'white' }"
-        >
-          전송
-        </v-btn>
-      </v-col>
-    </v-row>
-
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6" class="text-center">
-        <v-btn @click="goBack" color="grey" outlined>
-          뒤로가기
-        </v-btn>
-      </v-col>
-    </v-row>
-
-    <!-- 키워드 출력 -->
-    <v-row justify="center" class="mt-4">
-      <v-col cols="12" sm="8" md="6" class="text-center">
-        <p>키워드: {{ keywords }}</p>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="chatbot-container">
+    <h2>추출된 키워드:</h2>
+    <div class="keywords-container">
+      <span v-for="(keyword, index) in keywordsArray" :key="index" class="keyword-box">
+        {{ keyword }}
+      </span>
+    </div>
+    <div class="buttons-container">
+      <button @click="generateQuestions('predict')" class="btn btn-primary" :disabled="loading">
+        <span v-if="!loading">예상 질문 뽑기</span>
+        <span v-else>예상 질문 뽑기 중...</span>
+      </button>
+      <button @click="generateQuestions('company')" class="btn btn-secondary" :disabled="loading">
+        회사 관련 질문 뽑기
+      </button>
+    </div>
+    <p class="note">참고: 이 도구는 AI를 사용하여 면접 준비를 돕습니다. 실제 면접 질문 및 최적의 답변은 다를 수 있습니다.</p>
+    <!-- 로딩 애니메이션이 이 위치에 표시됩니다. -->
+    <div v-if="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <span>질문 생성중...</span>
+    </div>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted, onUpdated } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import axios from "axios";
 
 export default {
   data() {
     return {
-      messages: [{ id: 1, sender: '면접도우미', text: '안녕하세요! 면접 준비를 도와드리겠습니다.' }],
-      userInput: '',
-      keywords: ''
-    }
+      keywords: "",  // keywords는 문자열로 시작
+      keywordsArray: [],  // keywords를 배열로 처리
+      loading: false,
+    };
   },
   mounted() {
-    const route = useRoute()
-    // URL에서 키워드를 가져와서 표시
-    this.keywords = route.query.keywords || '키워드가 없습니다.'
+    const query = this.$route.query.keywords;
+    if (query) {
+      try {
+        const parsedKeywords = JSON.parse(decodeURIComponent(query));
+        if (parsedKeywords.content) {
+          this.keywords = parsedKeywords.content;
+          this.keywordsArray = this.keywords.split(",").map((keyword) => keyword.trim()); // 문자열을 배열로 변환
+        }
+      } catch (error) {
+        console.error("Invalid keywords format:", error);
+      }
+    }
   },
   methods: {
-    sendMessage() {
-      if (this.userInput.trim() !== '') {
-        this.messages.push({ id: this.messages.length + 1, sender: '나', text: this.userInput })
-        this.userInput = '' 
-        setTimeout(() => {
-          this.messages.push({ id: this.messages.length + 1, sender: '면접도우미', text: '메시지를 받았습니다!' })
-        }, 1000)
+    async generateQuestions(type) {
+      this.loading = true;
+
+      try {
+        const response = await axios.post("http://localhost:3000/generate-questions", {
+          type,
+          keywords: this.keywordsArray,  // keywordsArray로 배열 전달
+        });
+
+        // 질문 생성 성공 시 다음 페이지로 이동
+        const questions = encodeURIComponent(JSON.stringify(response.data.questions));
+        this.$router.push({ path: "/questions", query: { questions } });
+      } catch (error) {
+        console.error("질문 생성 중 오류 발생:", error);
+        alert("질문을 생성하는 데 실패했습니다. 다시 시도해주세요.");
+      } finally {
+        this.loading = false;
       }
     },
-    goBack() {
-      this.$router.go(-1)
-    }
   },
-  updated() {
-    const chatWindow = document.querySelector('.chat-window .v-card__text')
-    if (chatWindow) {
-      chatWindow.scrollTop = chatWindow.scrollHeight
-    }
-  }
-}
+};
 </script>
 
 <style scoped>
-.chat-window {
-  height: 400px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
+.chatbot-container {
+  text-align: center;
+  margin: 20px;
 }
 
-.message {
+.keywords-container {
   display: flex;
-  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
 }
 
-.user-message {
-  justify-content: flex-end;
-}
-
-.bot-message {
-  justify-content: flex-start;
-}
-
-.message-content {
-  max-width: 80%;
-  padding: 10px 15px;
+.keyword-box {
+  background-color: #000;
+  color: #fff;
   border-radius: 15px;
-  background-color: #e0e0e0;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
 }
 
-.user-message .message-content {
-  background-color: #808080; 
+.buttons-container {
+  margin: 20px;
+}
+
+.btn {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
   color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.note {
+  font-size: 12px;
+  color: gray;
+  margin-top: 20px;
+}
+
+/* 로딩 애니메이션 스타일 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #38dbdb;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+/* 로딩 애니메이션 회전 */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>

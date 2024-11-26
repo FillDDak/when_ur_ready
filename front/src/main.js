@@ -8,6 +8,8 @@ import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap';
 
+
+
 loadFonts()
 axios.baseURL = "/api"
 
