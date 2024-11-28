@@ -54,7 +54,7 @@ export default {
       this.loading = true;
 
       try {
-        const response = await axios.post("http://localhost:3000/generate-questions", {
+        const response = await axios.post("/api/generate-questions", {
           type,
           keywords: this.keywordsArray,  // keywordsArray로 배열 전달
         });
@@ -145,7 +145,12 @@ export default {
 
 /* 로딩 애니메이션 회전 */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

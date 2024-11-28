@@ -77,7 +77,7 @@ export default {
         this.analysisComplete = false;
         try {
           // URL을 JSON 형식으로 보내기
-          const response = await axios.post('http://localhost:3000/extract-keywords', {
+          const response = await axios.post('/api/extract-keywords', {
             url: this.companyUrl // URL을 JSON 형태로 전송
           }, {
             headers: {
