@@ -11,20 +11,6 @@
         </v-row>
       </v-container>
 
-      <v-container class="py-12">
-        <v-row>
-          <v-col v-for="feature in features" :key="feature.title" cols="12" md="4">
-            <v-card class="mx-auto" max-width="400" @click="$router.push(feature.link)" style="cursor: pointer;">
-              <v-card-title>
-                <v-icon left :color="feature.color" class="mr-2">{{ feature.icon }}</v-icon>
-                {{ feature.title }}
-              </v-card-title>
-              <v-card-text>{{ feature.description }}</v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-
       <!-- 챗봇 UI 추가 -->
       <div v-if="isChatActive" class="chatbot-ui">
         <h2 class="chat-title">챗봇과 대화하기</h2>
@@ -58,12 +44,6 @@
 export default {
   data() {
     return {
-      // 기능 카드
-      features: [
-        { title: '즐겨찾기', description: '자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.', icon: 'mdi-star', color: 'yellow', link: '/favorites' },
-        { title: '검토하기', description: '면접 준비 현황을 분석하여 개선이 필요한 부분을 파악하고 보다 전략적으로 준비할 수 있도록 도와드립니다.', icon: 'mdi-message', color: 'blue', link: '/review' },
-        { title: '마이페이지', description: '자신의 면접 준비 기록을 저장하고 피드백 및 추천 사항을 관리할 수 있는 개인 맞춤형 공간입니다.', icon: 'mdi-book', color: 'green', link: '/mypage' },
-      ],
       // 소셜 아이콘
       socialIcons: ['mdi-facebook', 'mdi-twitter', 'mdi-linkedin'],
 
