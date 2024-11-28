@@ -4,7 +4,6 @@ import Chatbot from '../views/Chatbot.vue';
 import DocumentChecker from '../views/DocumentChecker.vue';
 import SignUp from '../views/SignUp.vue';
 import Favorites from '../views/Favorites.vue';
-import Review from '../views/Review.vue';
 import MyPage from '../views/MyPage.vue';
 import ChatBotPage from '@/views/ChatBotPage.vue';
 import Example from '../views/Example.vue';
@@ -39,11 +38,6 @@ const routes = [
     path: '/signup',
     name: 'SignUp',
     component: SignUp,
-  },
-  {
-    path: '/review',
-    name: 'Review',
-    component: Review,
   },
   {
     path: '/favorites',

@@ -30,7 +30,7 @@
         <!-- 유저 버튼 -->
         <v-btn v-if="!$store.state.loginUser" style="background-color: #314692; font-size: 16px;"
           class="mr-2 font-weight-bold" rounded="xl" @click="loginDialog = true, user.id = '', user.password = '',
-            idErrorMessage = '', passwordErrorMessage = '', showPassword = false">로그인</v-btn>
+            idErrorMessage = '', passwordErrorMessage = '', showPassword = false" color="white">로그인</v-btn>
         <v-btn v-if="!$store.state.loginUser" style="background-color: lightgray; font-size: 16px;"
           class="mr-3 font-weight-bold" rounded="xl" @click="$router.push('/signup')">회원가입</v-btn>
 
@@ -97,7 +97,6 @@ export default {
       },
       servicesItems: [
         { title: '면접 질문 챗봇', route: '/chatbot' },
-        { title: '검토하기', route: '/review' },
         { title: '자기소개서 AI 검토', route: '/documentchecker' }
       ],
       userItems: [

@@ -1,8 +1,9 @@
 <template>
   <v-app>
     <v-main>
-      <v-container fluid class="hero-section" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
-        <v-row align="center" justify="center" style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
+      <v-container fluid class="hero-section pa-0" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
+        <v-row align="center" justify="center"
+          style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
           <v-col cols="12" md="8" class="text-center text-white">
             <h1 class="text-h2 font-weight-bold mb-4">반갑습니다!</h1>
             <p class="text-h5 mb-8">당신의 면접을 위한 맞춤형 지원 서비스</p>
@@ -21,7 +22,7 @@
         <v-btn @click="sendMessage" color="secondary">전송</v-btn>
       </div>
     </v-main>
-    
+
     <!-- 푸터 -->
     <v-footer app color="white">
       <v-container>
