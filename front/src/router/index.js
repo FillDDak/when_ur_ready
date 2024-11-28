@@ -26,7 +26,7 @@ const routes = [
     component: Chatbot, 
   },
   {
-    path: '/chatbot',  
+    path: '/chatbotpage ',  
     name: 'chatbotpage',
     component: ChatBotPage,
   },
