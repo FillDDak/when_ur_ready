@@ -10,7 +10,10 @@
     "@mdi/font": "5.9.55",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "canvas": "^2.11.2",
     "core-js": "^3.8.3",
+    "face-api.js": "^0.22.2",
+    "fs": "^0.0.1-security",
     "roboto-fontface": "*",
     "vue": "^3.5.12",
     "vue-router": "^4.0.3",
@@ -28,5 +31,4 @@
     "vue-cli-plugin-vuetify": "~2.5.8",
     "webpack-plugin-vuetify": "^2.0.0-alpha.0"
   }
- 
 }

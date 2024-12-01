@@ -14,9 +14,75 @@ var tesseract = require('tesseract.js');
 var pdfParse = require("pdf-parse");
 var mammoth = require("mammoth");
 
+const faceapi = require('face-api.js');
+const canvas = require('canvas');
+const bodyParser = require("body-parser");
+
 var staticPath = path.join(__dirname, "../static");
 var uploadFolder = path.join(__dirname, "../static/upload");
 var upload = multer({ dest: uploadFolder });
+
+// face-api.js 환경설정
+faceapi.env.monkeyPatch({ Canvas: canvas.Canvas, Image: canvas.Image, ImageData: canvas.ImageData });
+
+// 파일 경로 설정
+const groupStaticPath = path.join(__dirname, 'groupStatic');
+const groupUploadFolder = path.join(groupStaticPath, 'groupUpload');
+
+// 디렉토리 생성
+if (!fs.existsSync(groupUploadFolder)) {
+  fs.mkdirSync(groupUploadFolder, { recursive: true }); // 중간 디렉토리도 생성
+}
+
+// 파일 업로드 설정
+const groupUpload = multer({ dest: groupUploadFolder });
+
+// 모델 로드 함수
+let modelsLoaded = false;  // 모델이 로드되었는지 확인하는 변수
+
+async function loadModels() {
+  if (modelsLoaded) return;  // 이미 모델이 로드되었다면 다시 로드하지 않음
+  const MODEL_URL = path.join(__dirname, '..', 'models');  // 모델 경로를 backend/models로 설정
+  await faceapi.nets.tinyFaceDetector.loadFromDisk(MODEL_URL);
+  await faceapi.nets.faceExpressionNet.loadFromDisk(MODEL_URL);
+  modelsLoaded = true;
+  console.log("모델이 성공적으로 로드되었습니다.");
+}
+
+// 모델 로드
+loadModels();
+
+// 표정 분석 API
+router.post('/analyze-expression', async (req, res) => {
+  try {
+    const { imageData } = req.body;
+    if (!imageData) {
+      return res.status(400).json({ error: "이미지가 제공되지 않았습니다." });
+    }
+
+    // 이미지 데이터를 base64로 디코딩하여 Canvas로 생성
+    const img = new canvas.Image();
+    img.src = Buffer.from(imageData.split(",")[1], 'base64');
+
+    // 얼굴과 표정 분석
+    const detections = await faceapi
+      .detectAllFaces(img, new faceapi.TinyFaceDetectorOptions())
+      .withFaceExpressions();
+
+    if (detections.length > 0) {
+      const expressions = detections[0].expressions;
+      const dominantExpression = Object.keys(expressions).reduce((a, b) =>
+        expressions[a] > expressions[b] ? a : b
+      );
+      res.json({ result: `감지된 표정: ${dominantExpression}` });
+    } else {
+      res.json({ result: "감지된 표정: 없음" });
+    }
+  } catch (error) {
+    console.error("표정 분석 중 오류 발생:", error);
+    res.status(500).json({ error: "표정 분석 중 오류가 발생했습니다." });
+  }
+});
 
 // CORS 미들웨어 사용
 router.use(cors()); // 모든 요청에 CORS 허용

@@ -12,6 +12,8 @@ import QuestionsPage from "@/views/QuestionsPage.vue";
 import FeedbackPage from "@/views/FeedbackPage.vue"; 
 import PredictQuestions from '../views/PredictQuestions.vue'; 
 import CompanyQuestions from '../views/CompanyQuestions.vue';
+import FaceRecognition from '../views/FaceRecognition.vue'
+import InterviewStudyBoard from '../views/InterviewStudyBoard.vue'
 
 const routes = [
   {
@@ -82,6 +84,16 @@ const routes = [
     name: 'company-questions',
     component: CompanyQuestions,
   },
+  {
+    path: '/facerecognition',  
+    name: 'FaceRecognition',  
+    component: FaceRecognition
+  },
+  {
+    path: '/interviewstudyboard',
+    name: 'InterviewStudyBoard',
+    component: InterviewStudyBoard
+  }
 ];
 
 const router = createRouter({
