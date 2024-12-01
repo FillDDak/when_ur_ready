@@ -97,7 +97,9 @@ export default {
       },
       servicesItems: [
         { title: '면접 질문 챗봇', route: '/chatbot' },
-        { title: '자기소개서 AI 검토', route: '/documentchecker' }
+        { title: '자기소개서 AI 검토', route: '/documentchecker' },
+        { title: '면접 표정 분석', route: '/facerecognition' },
+        { title: '스터디 그룹 모집', route: '/interviewstudyboard' }
       ],
       userItems: [
         { title: '마이페이지', route: '/mypage' },

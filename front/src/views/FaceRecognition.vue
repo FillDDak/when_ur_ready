@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import * as faceapi from 'face-api.js';
+
 export default {
   name: "FaceRecognition",
   data() {
