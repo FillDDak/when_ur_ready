@@ -118,7 +118,7 @@ export default {
         description: "",
         methodology: "", // 공부 방법 (스터디 그룹 전용)
         salary: "", // 월급 (채용 공고 전용)
-        photo: null, // 첨부 사진 파일
+        photo: null // 첨부 사진 파일
       },
     };
   },
@@ -185,7 +185,7 @@ export default {
           : "/job-posts";
 
       // POST 요청
-      this.axios.post(endpoint, formData, {
+      axios.post(endpoint, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
