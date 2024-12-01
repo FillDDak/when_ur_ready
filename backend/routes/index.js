@@ -31,7 +31,7 @@ const groupUploadFolder = path.join(groupStaticPath, 'groupUpload');
 
 // 디렉토리 생성
 if (!fs.existsSync(groupUploadFolder)) {
-  fs.mkdirSync(groupUploadFolder, { recursive: true }); // 중간 디렉토리도 생성
+  fs.mkdirSync(groupUploadFolder, { recursive: true }); // 중간 디렉토리 생성 포함
 }
 
 // 파일 업로드 설정
@@ -42,7 +42,7 @@ let modelsLoaded = false;  // 모델이 로드되었는지 확인하는 변수
 
 async function loadModels() {
   if (modelsLoaded) return;  // 이미 모델이 로드되었다면 다시 로드하지 않음
-  const MODEL_URL = path.join(__dirname, '..', 'models');  // 모델 경로를 backend/models로 설정
+  const MODEL_URL = path.join(__dirname, '../models');  // 모델 경로를 backend/models로 설정
   await faceapi.nets.tinyFaceDetector.loadFromDisk(MODEL_URL);
   await faceapi.nets.faceExpressionNet.loadFromDisk(MODEL_URL);
   modelsLoaded = true;
@@ -314,6 +314,79 @@ router.post("/analyze-answer", express.json(), async (req, res) => {
     console.error("답변 분석 중 오류 발생", error);
     res.status(500).json({ error: "답변 분석 중 오류가 발생했습니다." });
   }
+});
+
+// 데이터 저장소 (임시로 메모리에 저장)
+let studyGroups = [];
+let jobPosts = [];
+
+// Multer 설정 (파일 업로드)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "upload/"); // 파일 업로드 경로
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // 고유 파일명 생성
+  },
+});
+
+// API Routes
+// 1. 스터디 그룹 목록 조회
+router.get("/study-groups", (req, res) => {
+  res.json(studyGroups);
+});
+
+// 2. 채용 공고 목록 조회
+router.get("/job-posts", (req, res) => {
+  res.json(jobPosts);
+});
+
+// 3. 스터디 그룹 생성
+router.post("/study-groups", upload.single("photo"), (req, res) => {
+  const { title, language, capacity, description, methodology } = req.body;
+  const photo = req.file ? `/upload/${req.file.filename}` : null;
+
+  const newGroup = {
+    id: Date.now(),
+    title,
+    language,
+    capacity: parseInt(capacity, 10),
+    description,
+    methodology,
+    photo,
+    members: 0,
+  };
+
+  studyGroups.push(newGroup);
+
+  res.json({
+    message: "스터디 그룹이 성공적으로 생성되었습니다!",
+    group: newGroup,
+  });
+});
+
+// 4. 채용 공고 생성
+router.post("/job-posts", upload.single("photo"), (req, res) => {
+  const { title, language, capacity, description, salary } = req.body;
+  const photo = req.file ? `/upload/${req.file.filename}` : null;
+
+  const newJobPost = {
+    id: Date.now(),
+    title,
+    language,
+    capacity: parseInt(capacity, 10),
+    description,
+    salary: parseInt(salary, 10),
+    photo,
+  };
+
+  jobPosts.push(newJobPost);
+
+  res.json({
+    message: "채용 공고가 성공적으로 생성되었습니다!",
+    jobPost: newJobPost,
+  });
 });
 
 module.exports = router;

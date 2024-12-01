@@ -102,9 +102,6 @@
 
 <script>
 import axios from "axios";
-const api = axios.create({
-  baseURL: "/api", // 실제 API URL로 변경
-});
 
 export default {
   name: "InterviewStudyBoard",
@@ -131,8 +128,7 @@ export default {
     },
     fetchStudyGroups() {
       // 수정된 API 요청
-      api
-        .get("/study-groups")
+      axios.get("/api/study-groups")
         .then((response) => {
           this.studyGroups = response.data;
         })
@@ -189,12 +185,11 @@ export default {
           : "/job-posts";
 
       // POST 요청
-      api
-        .post(endpoint, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+      this.axios.post(endpoint, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
         .then((response) => {
           alert(response.data.message);
           if (this.modalType === "studyGroup") {

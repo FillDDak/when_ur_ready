@@ -6,7 +6,7 @@
         면접이 시작되면 여기에 비디오가 표시됩니다.
       </div>
       <video v-show="videoStream" ref="video" autoplay playsinline width="640" height="480"></video>
-  <canvas ref="canvas" width="640" height="480" style="position: absolute;"></canvas>
+      <canvas ref="canvas" width="640" height="480" style="position: absolute;"></canvas>
       <!-- <div v-if="loading" class="loading-overlay">
         <div class="spinner"></div>
       </div> -->
@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import * as faceapi from 'face-api.js';
-
 export default {
   name: "FaceRecognition",
   data() {
@@ -36,14 +34,13 @@ export default {
     this.loadModels();
   },
   methods: {
-    async loadModels() {0
+    async loadModels() {
       try {
         const MODEL_URL = '/models'; // public 디렉토리에서 모델 파일을 로드
         await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
         await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
         await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
         await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
-      
         await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
         console.log("모델 로드 완료");
       } catch (error) {
@@ -52,7 +49,7 @@ export default {
     },
     startVideo() {
       if (this.videoStream) return; // 이미 스트림이 있으면 재시작하지 않음
-     var video=this.$refs.video 
+      var video = this.$refs.video
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => {
@@ -83,7 +80,7 @@ export default {
       this.loading = true;
 
       const video = this.$refs.video;
-      const canvas= this.$refs.canvas
+      const canvas = this.$refs.canvas
       video.onloadeddata = () => {
         canvas.width = video.width;
         canvas.height = video.height;
@@ -95,7 +92,7 @@ export default {
       // // 리사이즈된 이미지 크기 설정
       // const MAX_WIDTH = 320;  // 최대 가로 크기 (원하는 크기로 설정)
       // const MAX_HEIGHT = 240; // 최대 세로 크기 (원하는 크기로 설정)
-      
+
       // // 원본 비디오 크기 비율을 유지하며 리사이즈
       // const scale = Math.min(MAX_WIDTH / video.videoWidth, MAX_HEIGHT / video.videoHeight);
       // const width = video.videoWidth * scale;
@@ -138,8 +135,8 @@ export default {
       //   }
       // }
     },
-     // 얼굴 감지를 실시간으로 수행하는 함수
-     async detectFaces(video, canvas) {
+    // 얼굴 감지를 실시간으로 수행하는 함수
+    async detectFaces(video, canvas) {
       setInterval(async () => {
         const detections = await faceapi.detectAllFaces(video)
           .withFaceLandmarks()
@@ -147,7 +144,7 @@ export default {
           .withFaceDescriptors();
         console.log(detections)
         // 얼굴 감지 결과를 캔버스에 그립니다.
-        var context=canvas.getContext("2d")
+        var context = canvas.getContext("2d")
         canvas?.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         const resizedDetections = faceapi.resizeResults(detections, {
           width: video.width,
@@ -155,7 +152,7 @@ export default {
         });
         faceapi.draw.drawDetections(canvas, resizedDetections);
         faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-         // 표정 데이터를 텍스트로 표시
+        // 표정 데이터를 텍스트로 표시
         resizedDetections.forEach(detection => {
           const { expressions, detection: faceBox } = detection;
 
@@ -206,8 +203,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ccc; /* 회색 배경 */
-  color: #666; /* 텍스트 색상 */
+  background-color: #ccc;
+  /* 회색 배경 */
+  color: #666;
+  /* 텍스트 색상 */
   font-size: 16px;
   border-radius: 8px;
 }
@@ -244,6 +243,7 @@ video {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
