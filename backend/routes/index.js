@@ -135,7 +135,7 @@ router.post("/extract-keywords", express.json(), async (req, res) => {
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
-        { "role": "user", "content": `다음 문장에서 핵심 키워드를 단어 형식으로 5가지만 추출해 주세요. 문장이 아닌 단어만 나열해주세요:\n${pageText}` }
+        { "role": "user", "content": `다음 문장에서 면접과 관련된 핵심 키워드를 단어 형식으로 10가지만 추출해 주세요. 문장이 아닌 단어만 나열해주세요:\n${pageText}` }
       ]
     });
 
@@ -165,7 +165,7 @@ router.post("/generate-questions", express.json(), async (req, res) => {
 
     if (type === "company") {
       prompt = `
-        다음 키워드를 기반으로 회사 관련 질문 5개를 생성해주세요.
+        다음 키워드를 기반으로 회사에서 면접자에게 물어볼것같은 관련 질문 5개를 생성해주세요.
         각 질문은 해당 회사에서 자주 물어볼 법한 질문이어야 하며, 다음과 같은 질문 유형을 포함해야 합니다:
         1. 회사와 관련된 경험을 묻는 질문
         2. 기업 문화와 적합성에 대한 질문
@@ -175,13 +175,14 @@ router.post("/generate-questions", express.json(), async (req, res) => {
       `;
     } else {
       prompt = `
-        다음 키워드를 기반으로 각각 2개의 질문씩, 총 10개의 면접 질문을 생성해주세요. 
+        다음 키워드를 기반으로 각각 2개의 질문씩, 총 5개의 면접 질문을 생성해주세요. 
         질문은 아래와 같은 유형 중 하나를 포함해야 합니다:
         1. 개방형 질문
         2. 심화 질문
         3. 가정 기반 질문
         4. 경험 기반 질문
         5. 행동 기반 질문
+        단 질문을 추출할때 기존에 추출했던 키워드는 보여주지 않아도 됩니다.
 
         키워드: ${keywords.join(", ")}
 

@@ -14,6 +14,7 @@ import FeedbackPage from "@/views/FeedbackPage.vue";
 import PredictQuestions from '../views/PredictQuestions.vue'; 
 import CompanyQuestions from '../views/CompanyQuestions.vue';
 
+
 const routes = [
   {
     path: '/',
@@ -88,6 +89,7 @@ const routes = [
     name: 'company-questions',
     component: CompanyQuestions,
   },
+  
 ];
 
 const router = createRouter({

@@ -10,24 +10,20 @@
         class="text-center question-column"
       >
         <h1>예상 질문 목록</h1>
-        <ul>
-          <li
-            v-for="(question, index) in questions"
-            :key="index"
-            @click="selectQuestion(question)"
-            class="question-item"
-          >
-            <span>{{ question }}</span>
-            <!-- 즐겨찾기 별 아이콘 추가 -->
-            <v-icon
-              :color="isFavorite(question) ? 'yellow' : 'grey'"
-              @click.stop="toggleFavorite(question)"
-              class="favorite-icon"
+        <v-list>
+          <v-list-item-group>
+            <v-list-item
+              v-for="(question, index) in questions"
+              :key="index"
+              @click="selectQuestion(question)"
+              class="question-item-box"
             >
-              mdi-star
-            </v-icon>
-          </li>
-        </ul>
+              <v-card class="question-card">
+                <v-card-text>{{ question }}</v-card-text>
+              </v-card>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
       </v-col>
 
       <!-- 선택된 질문 -->
@@ -42,12 +38,13 @@
           <h3>선택한 질문:</h3>
           <p>{{ selectedQuestion }}</p>
 
+          <!-- 스타일링된 텍스트박스 -->
           <v-textarea
             v-model="answer"
             label="답변을 입력하세요"
             rows="4"
             outlined
-            class="mt-4"
+            class="styled-textarea mt-4"
           ></v-textarea>
 
           <!-- 답변 분석 요청 버튼 -->
@@ -184,85 +181,27 @@ export default {
 </script>
 
 <style scoped>
-.question-feedback-row {
-  display: flex;
-  transition: transform 0.5s ease;
-  justify-content: space-between; /* 각 컬럼 사이의 간격 조정 */
-}
-
-.question-column,
-.selected-question-column,
-.feedback-column {
-  transition: transform 0.5s ease;
-  position: relative;
-  max-width: 30%; /* 각 컬럼의 너비를 30%로 제한하여 화면에 잘 맞게 */
-}
-
-.move-left {
-  transform: translateX(-20%); /* 질문 목록과 선택된 질문 왼쪽으로 이동 */
-}
-
-.move-right {
-  transform: translateX(20%); /* 피드백 영역 오른쪽으로 이동 */
-}
-
-.question-item {
-  font-size: 1.2rem;
-  margin: 10px 0;
-  cursor: pointer;
-  color: #000000;
-  display: flex;
-  justify-content: space-between; /* 텍스트와 아이콘을 양쪽에 배치 */
-  align-items: center;
-}
-
-.question-item:hover {
-  color: #1565c0;
-}
-
-.favorite-icon {
-  cursor: pointer;
-  font-size: 1.3rem; /* 아이콘 크기 조정 */
-}
-
-.mt-4 {
-  margin-top: 16px;
-}
-
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-top: 20px;
-}
-
-.feedback-card {
-  background-color: #f1f8e9;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.feedback-title {
-  font-size: 1.5rem;
-  color: #388e3c;
-  display: flex;
-  align-items: center;
-}
-
-.feedback-icon {
-  font-size: 2rem;
-}
-
-.feedback-subtitle {
-  font-size: 1rem;
-  color: #607d8b;
+/* 예상 질문 박스 스타일 */
+.question-item-box {
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
-.feedback-content {
-  font-size: 1.1rem;
+.question-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  transition: box-shadow 0.3s;
+}
+
+.question-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.question-card .v-card-text {
+  padding: 12px;
+  font-size: 1rem;
   color: #333;
-  line-height: 1.6;
 }
 </style>

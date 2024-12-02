@@ -2,14 +2,21 @@
   <div class="chatbot-container">
     <h2>추출된 키워드:</h2>
     <div class="keywords-container">
-      <span v-for="(keyword, index) in keywordsArray" :key="index" class="keyword-box">
-        {{ keyword }}
-      </span>
+      <transition-group name="fade" tag="div">
+        <span
+          v-for="(keyword, index) in keywordsArray"
+          :key="index"
+          class="keyword-box"
+          :style="{ animationDelay: `${index * 0.2}s` }"
+        >
+          {{ keyword }}
+        </span>
+      </transition-group>
     </div>
     <div class="buttons-container">
       <button @click="generateQuestions('predict')" class="btn btn-primary" :disabled="loading">
         <span v-if="!loading">예상 질문 뽑기</span>
-        <span v-else>예상 질문 뽑기 중...</span>
+        <span v-else>예상 질문 생성 중...</span>
       </button>
       <button @click="generateQuestions('company')" class="btn btn-secondary" :disabled="loading">
         회사 관련 질문 뽑기
@@ -79,22 +86,50 @@ export default {
   margin: 20px;
 }
 
+/* '추출된 키워드' 텍스트에 애니메이션 효과 추가 */
+h2 {
+  animation: fadeInDown 1s forwards; /* 애니메이션 속도 */
+  margin-bottom: 20px;
+}
 .keywords-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 50px;
   justify-content: center;
   margin: 20px 0;
 }
 
 .keyword-box {
-  background-color: #000;
+  background-color: #000000;
   color: #fff;
   border-radius: 15px;
   padding: 10px 15px;
   font-size: 14px;
   font-weight: bold;
   display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+  width: calc(20% - 10px); /* 한 줄에 최대 5개 키워드 */
+  box-sizing: border-box; /* padding과 border를 포함한 너비 계산 */
+  word-break: break-word; /* 긴 키워드 줄 바꿈 */
+  margin-bottom: 15px; /* 줄 간격 */
+  margin-right: 10px; /* 단어 사이 간격 */
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 
 .buttons-container {
@@ -110,18 +145,18 @@ export default {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #abcd55;
   color: white;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #abcd55;
   color: white;
 }
 
 .note {
   font-size: 12px;
-  color: gray;
+  color: rgb(156, 147, 147);
   margin-top: 20px;
 }
 
