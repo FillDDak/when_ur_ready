@@ -110,11 +110,11 @@ h2 {
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 1s forwards;
-  width: calc(20% - 10px); /* 한 줄에 최대 5개 키워드 */
-  box-sizing: border-box; /* padding과 border를 포함한 너비 계산 */
-  word-break: break-word; /* 긴 키워드 줄 바꿈 */
-  margin-bottom: 15px; /* 줄 간격 */
-  margin-right: 10px; /* 단어 사이 간격 */
+  width: calc(20% - 10px); 
+  box-sizing: border-box; 
+  word-break: break-word; 
+  margin-bottom: 15px; 
+  margin-right: 10px; 
 }
 
 @keyframes fadeInUp {
