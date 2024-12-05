@@ -19,9 +19,9 @@
             </v-avatar>
           </v-col>
           <v-col cols="12" md="8">
-            <v-text-field label="이름" v-model="profile.name"></v-text-field>
-            <v-text-field label="연락처" v-model="profile.contact"></v-text-field>
-            <v-text-field label="이메일" v-model="profile.email"></v-text-field>
+            <v-text-field label="이름" v-model="profile.name">{{ user.name }}</v-text-field>
+            <v-text-field label="연락처" v-model="profile.phoneNumber">{{ user.phoneNumber }}</v-text-field>
+            <v-text-field label="이메일" v-model="profile.email">{{ user.email }}</v-text-field>
           </v-col>
         </v-row>
       </v-card-text>
@@ -38,50 +38,34 @@
       <v-card-text>
         <v-row>
           <v-col cols="11">
-            <v-text-field
-              label="기존 비밀번호"
-              v-model="account.currentPassword"
-              :type="showPasswords.current ? 'text' : 'password'"
-            ></v-text-field>
+            <v-text-field label="기존 비밀번호" v-model="account.currentPassword"
+              :type="showPasswords.current ? 'text' : 'password'"></v-text-field>
           </v-col>
           <v-col cols="1" class="d-flex align-center">
-            <v-icon
-              @mousedown="togglePasswordVisibility('current', true)"
+            <v-icon @mousedown="togglePasswordVisibility('current', true)"
               @mouseup="togglePasswordVisibility('current', false)"
-              @mouseleave="togglePasswordVisibility('current', false)"
-            >mdi-eye</v-icon>
+              @mouseleave="togglePasswordVisibility('current', false)">mdi-eye</v-icon>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="11">
-            <v-text-field
-              label="새 비밀번호"
-              v-model="account.newPassword"
-              :type="showPasswords.new ? 'text' : 'password'"
-            ></v-text-field>
+            <v-text-field label="새 비밀번호" v-model="account.newPassword"
+              :type="showPasswords.new ? 'text' : 'password'"></v-text-field>
           </v-col>
           <v-col cols="1" class="d-flex align-center">
-            <v-icon
-              @mousedown="togglePasswordVisibility('new', true)"
-              @mouseup="togglePasswordVisibility('new', false)"
-              @mouseleave="togglePasswordVisibility('new', false)"
-            >mdi-eye</v-icon>
+            <v-icon @mousedown="togglePasswordVisibility('new', true)" @mouseup="togglePasswordVisibility('new', false)"
+              @mouseleave="togglePasswordVisibility('new', false)">mdi-eye</v-icon>
           </v-col>
         </v-row>
         <v-row>
           <v-col cols="11">
-            <v-text-field
-              label="비밀번호 확인"
-              v-model="account.confirmPassword"
-              :type="showPasswords.confirm ? 'text' : 'password'"
-            ></v-text-field>
+            <v-text-field label="비밀번호 확인" v-model="account.confirmPassword"
+              :type="showPasswords.confirm ? 'text' : 'password'"></v-text-field>
           </v-col>
           <v-col cols="1" class="d-flex align-center">
-            <v-icon
-              @mousedown="togglePasswordVisibility('confirm', true)"
+            <v-icon @mousedown="togglePasswordVisibility('confirm', true)"
               @mouseup="togglePasswordVisibility('confirm', false)"
-              @mouseleave="togglePasswordVisibility('confirm', false)"
-            >mdi-eye</v-icon>
+              @mouseleave="togglePasswordVisibility('confirm', false)">mdi-eye</v-icon>
           </v-col>
         </v-row>
       </v-card-text>
@@ -107,10 +91,11 @@ export default {
   name: 'Review',
   data() {
     return {
+      user: {},
       profile: {
         photo: '',
         name: '',
-        contact: '',
+        phoneNumber: '',
         email: ''
       },
       account: {
@@ -125,7 +110,22 @@ export default {
       }
     };
   },
+  created() {
+    this.fetchUserInfo();
+  },
   methods: {
+    fetchUserInfo() {
+      this.$axios.post("/api/users/info")
+        .then(response => {
+          if (response.data.result === "success") {
+            this.user = response.data.user;
+          } else {
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching user info:", error);
+        });
+    },
     uploadPhoto() {
       this.$refs.photoInput.click();
     },
