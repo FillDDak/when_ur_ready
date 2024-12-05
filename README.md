@@ -1,4 +1,4 @@
-![이미지 설명]front/src/assets/readylogo.png<br>
+![이미지 설명](front/src/assets/readylogo.png)<br>
 <br>
 ***면접준비 지원 서비스***
 
