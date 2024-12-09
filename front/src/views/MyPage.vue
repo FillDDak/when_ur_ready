@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <h1>마이페이지</h1>
-    <p></p>
 
     <!-- 프로필 관리 섹션 -->
     <v-card class="mb-5">
@@ -125,6 +124,9 @@ export default {
       }
     };
   },
+  created() {
+    this.loadProfileData();
+  },
   methods: {
     uploadPhoto() {
       this.$refs.photoInput.click();
@@ -132,11 +134,23 @@ export default {
     onPhotoChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.profile.photo = URL.createObjectURL(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.profile.photo = e.target.result;
+          this.saveProfile(); // 사진 변경 시 자동 저장
+        };
+        reader.readAsDataURL(file);
       }
     },
     saveProfile() {
+      localStorage.setItem('profile', JSON.stringify(this.profile));
       alert('프로필 정보가 저장되었습니다.');
+    },
+    loadProfileData() {
+      const savedProfile = JSON.parse(localStorage.getItem('profile'));
+      if (savedProfile) {
+        this.profile = savedProfile;
+      }
     },
     togglePasswordVisibility(field, visible) {
       this.showPasswords[field] = visible;
@@ -150,28 +164,29 @@ export default {
         alert('비밀번호가 일치하지 않습니다.');
         return;
       }
+      this.account.currentPassword = this.account.newPassword;
+      localStorage.setItem('profile', JSON.stringify(this.profile)); // 새 비밀번호 저장
       alert('비밀번호가 변경되었습니다.');
+      this.resetAccount();
     },
     resetAccount() {
-      this.account = {
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      };
-      alert('비밀번호 변경이 초기화되었습니다.');
+      this.account.newPassword = '';
+      this.account.confirmPassword = '';
     },
     logout() {
       alert('로그아웃되었습니다.');
     },
     deleteAccount() {
       if (confirm('정말로 계정을 탈퇴하시겠습니까?')) {
+        localStorage.removeItem('profile');
         this.profile = { photo: '', name: '', contact: '', email: '' };
         this.account = { currentPassword: '', newPassword: '', confirmPassword: '' };
         alert('계정이 탈퇴되었습니다.');
       }
     },
     validateCurrentPassword(inputPassword) {
-      return true;
+      // 비밀번호 검증 로직
+      return inputPassword === this.account.currentPassword || !this.account.currentPassword;
     }
   }
 };
