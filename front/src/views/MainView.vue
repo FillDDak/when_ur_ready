@@ -1,26 +1,13 @@
 <template>
   <v-app>
     <v-main>
-      <v-container fluid class="hero-section" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
-        <v-row align="center" justify="center" style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
+      <v-container fluid class="hero-section pa-0" :style="{ backgroundImage: `url(${currentBackgroundImage})` }">
+        <v-row align="center" justify="center"
+          style="height: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 0 20px;">
           <v-col cols="12" md="8" class="text-center text-white">
             <h1 class="text-h2 font-weight-bold mb-4">반갑습니다!</h1>
             <p class="text-h5 mb-8">당신의 면접을 위한 맞춤형 지원 서비스</p>
             <v-btn x-large color="secondary" @click="$router.push('/chatbot')">면접 준비를 시작해보세요!</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-
-      <v-container class="py-12">
-        <v-row>
-          <v-col v-for="feature in features" :key="feature.title" cols="12" md="4">
-            <v-card class="mx-auto" max-width="400" @click="$router.push(feature.link)" style="cursor: pointer;">
-              <v-card-title>
-                <v-icon left :color="feature.color" class="mr-2">{{ feature.icon }}</v-icon>
-                {{ feature.title }}
-              </v-card-title>
-              <v-card-text>{{ feature.description }}</v-card-text>
-            </v-card>
           </v-col>
         </v-row>
       </v-container>
@@ -35,7 +22,7 @@
         <v-btn @click="sendMessage" color="secondary">전송</v-btn>
       </div>
     </v-main>
-    
+
     <!-- 푸터 -->
     <v-footer app color="white">
       <v-container>
@@ -58,12 +45,6 @@
 export default {
   data() {
     return {
-      // 기능 카드
-      features: [
-        { title: '즐겨찾기', description: '자주 찾는 면접 질문이나 자료를 즐겨찾기에 추가하여 빠르게 다시 확인할 수 있습니다.', icon: 'mdi-star', color: 'yellow', link: '/favorites' },
-        { title: '검토하기', description: '면접 준비 현황을 분석하여 개선이 필요한 부분을 파악하고 보다 전략적으로 준비할 수 있도록 도와드립니다.', icon: 'mdi-message', color: 'blue', link: '/review' },
-        { title: '마이페이지', description: '자신의 면접 준비 기록을 저장하고 피드백 및 추천 사항을 관리할 수 있는 개인 맞춤형 공간입니다.', icon: 'mdi-book', color: 'green', link: '/mypage' },
-      ],
       // 소셜 아이콘
       socialIcons: ['mdi-facebook', 'mdi-twitter', 'mdi-linkedin'],
 

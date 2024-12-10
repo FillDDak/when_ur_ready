@@ -28,18 +28,18 @@
         </v-menu>
 
         <!-- 유저 버튼 -->
-        <v-btn v-if="!$store.state.loginUser" style="background-color: #BADC6B; font-size: 16px;"
+        <v-btn v-if="!$store.state.loginUser" style="background-color: #314692; font-size: 16px;"
           class="mr-2 font-weight-bold" rounded="xl" @click="loginDialog = true, user.id = '', user.password = '',
-            idErrorMessage = '', passwordErrorMessage = '', showPassword = false">로그인</v-btn>
+            idErrorMessage = '', passwordErrorMessage = '', showPassword = false" color="white">로그인</v-btn>
         <v-btn v-if="!$store.state.loginUser" style="background-color: lightgray; font-size: 16px;"
           class="mr-3 font-weight-bold" rounded="xl" @click="$router.push('/signup')">회원가입</v-btn>
 
         <v-menu transition="slide-y-transition">
           <template v-slot:activator="{ props }">
-            <v-btn v-if="$store.state.loginUser" v-bind="props" style="background-color: #BADC6B; font-size: 16px;"
+            <v-btn v-if="$store.state.loginUser" v-bind="props" style="background-color: #314692; font-size: 16px;"
               class="mr-3 font-weight-bold" rounded="xl">
-              <v-icon size="x-large">mdi-account-circle</v-icon>
-              <v-icon right>mdi-menu-down</v-icon>
+              <v-icon color="white" size="x-large">mdi-account-circle</v-icon>
+              <v-icon color="white" right>mdi-menu-down</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -72,10 +72,10 @@
           <span class="text-button" @click="handleClick">비밀번호를 잊으셨나요?</span>
         </v-card-text>
         <v-card-actions class="d-flex flex-column justify-center">
-          <v-btn style="background-color: #BADC6B;" @click="login" class="font-weight-bold" rounded="xl" size="x-large"
+          <v-btn style="background-color: #314692;" @click="login" class="font-weight-bold" rounded="xl" size="x-large"
             width="300">로그인</v-btn>
           <v-btn text @click="$router.push('/signup'), loginDialog = false" class="button-hover">또는 회원가입</v-btn>
-          <v-btn style="border: 2px solid #BADC6B;" @click="loginDialog = false" class="mb-2 font-weight-bold"
+          <v-btn style="border: 2px solid #314692;" @click="loginDialog = false" class="mb-2 font-weight-bold"
             rounded="xl" size="x-large" width="300" outlined>취소</v-btn>
         </v-card-actions>
       </v-card>
@@ -97,8 +97,9 @@ export default {
       },
       servicesItems: [
         { title: '면접 질문 챗봇', route: '/chatbot' },
-        { title: '검토하기', route: '/review' },
-        { title: '자기소개서 AI 검토', route: '/documentchecker' }
+        { title: '자기소개서 AI 검토', route: '/documentchecker' },
+        { title: '면접 표정 분석', route: '/facerecognition' },
+        { title: '스터디 그룹 모집', route: '/interviewstudyboard' }
       ],
       userItems: [
         { title: '마이페이지', route: '/mypage' },

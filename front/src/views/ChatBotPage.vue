@@ -15,8 +15,7 @@
     </div>
     <div class="buttons-container">
       <button @click="generateQuestions('predict')" class="btn btn-primary" :disabled="loading">
-        <span v-if="!loading">예상 질문 뽑기</span>
-        <span v-else>예상 질문 생성 중...</span>
+        예상 질문 뽑기
       </button>
       <button @click="generateQuestions('company')" class="btn btn-secondary" :disabled="loading">
         회사 관련 질문 뽑기

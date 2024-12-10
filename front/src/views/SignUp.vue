@@ -120,7 +120,7 @@
             </v-card-text>
 
             <v-card-actions class="d-flex flex-column justify-center">
-              <v-btn style="background-color: #BADC6B;" @click="submitSignup" class="font-weight-bold" rounded="xl"
+              <v-btn style="background-color: #314692;" @click="submitSignup" class="font-weight-bold" rounded="xl"
                 size="x-large" width="300">회원가입</v-btn>
             </v-card-actions>
           </v-card>
