@@ -68,7 +68,6 @@
             @click:append-inner="togglePasswordVisibility" :error-messages="passwordErrorMessage"
             @input="passwordErrorMessage = ''">
           </v-text-field>
-          <span class="text-button" @click="handleClick">비밀번호를 잊으셨나요?</span>
         </v-card-text>
         <v-card-actions class="d-flex flex-column justify-center">
           <v-btn style="background-color: #314692;" @click="login" class="font-weight-bold" rounded="xl" size="x-large"

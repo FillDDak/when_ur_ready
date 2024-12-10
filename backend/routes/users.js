@@ -107,4 +107,64 @@ router.post("/logout", async function (req, res) {
   });
 });
 
+router.post("/change-password", async function (req, res) {
+  const { id, currentPassword, newPassword } = req.body;
+
+  const user = await sequelize.models.user.findOne({
+    where: {
+      id: id
+    }
+  });
+
+  if (!user) {
+    return res.json({
+      result: "fail",
+      message: "사용자를 찾을 수 없습니다."
+    });
+  }
+
+  if (user.password !== currentPassword) {
+    return res.json({
+      result: "fail",
+      message: "현재 비밀번호가 올바르지 않습니다."
+    });
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.json({
+    result: "success"
+  });
+});
+
+router.post("/delete", async function (req, res) {
+  const { id } = req.body;
+
+  const user = await sequelize.models.user.findOne({
+    where: {
+      id: id
+    }
+  });
+
+  if (!user) {
+    return res.json({
+      result: "fail",
+      message: "사용자를 찾을 수 없습니다."
+    });
+  }
+
+  await sequelize.models.user.destroy({
+    where: {
+      id: id
+    }
+  });
+
+  req.session.destroy();
+
+  res.json({
+    result: "success"
+  });
+});
+
 module.exports = router;

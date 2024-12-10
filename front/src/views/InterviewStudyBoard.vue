@@ -181,8 +181,8 @@ export default {
       // API 엔드포인트 선택
       const endpoint =
         this.modalType === "studyGroup"
-          ? "/study-groups"
-          : "/job-posts";
+          ? "/api/studyGroups/study-groups"
+          : "/api/studyGroups/job-posts";
 
       // POST 요청
       axios.post(endpoint, formData, {

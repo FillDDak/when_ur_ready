@@ -108,7 +108,8 @@
 
             <v-card-actions class="d-flex flex-column justify-center">
               <v-btn
-                style="background-color: #314692"
+                style="background-color: #314692;
+                color: white;"
                 @click="submitSignup"
                 class="font-weight-bold"
                 rounded="xl"

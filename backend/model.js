@@ -53,6 +53,42 @@ function model(Sequelize, connection) {
         }
     });
 
+    const Group = connection.define("group", {
+        no: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        title: {
+            type: Sequelize.STRING  // 제목
+        },
+        language: {
+            type: Sequelize.STRING  // 사용 언어
+        },
+        capacity: {
+            type: Sequelize.STRING  // 모집 인원
+        },
+        description: {
+            type: Sequelize.TEXT  // 세부 내용
+        },
+        methodology: {
+            type: Sequelize.STRING  // 스터디 그룹의 공부 방법
+        },
+        salary: {
+            type: Sequelize.STRING  // 채용 공고의 월급
+        },
+        photo: {
+            type: Sequelize.BLOB('long') // 첨부 사진 파일 (BLOB 타입으로 설정)
+        },
+        writer: {
+            type: Sequelize.STRING
+        },
+        writeDate: {
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW
+        }
+    });
+
     connection.sync({
         alter: true
     })
