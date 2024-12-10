@@ -65,17 +65,59 @@ function model(Sequelize, connection) {
         language: {
             type: Sequelize.STRING  // 사용 언어
         },
+        members: {
+            type: Sequelize.INTEGER  // 현재 인원
+        },
         capacity: {
-            type: Sequelize.STRING  // 모집 인원
+            type: Sequelize.INTEGER  // 모집 인원
+        },
+        meetingFrequency: {
+            type: Sequelize.STRING  // 미팅 빈도
         },
         description: {
             type: Sequelize.TEXT  // 세부 내용
         },
         methodology: {
-            type: Sequelize.STRING  // 스터디 그룹의 공부 방법
+            type: Sequelize.STRING  // 공부 방법 (스터디 그룹 전용)
+        },
+        photo: {
+            type: Sequelize.BLOB('long') // 첨부 사진 파일 (BLOB 타입으로 설정)
+        },
+        writer: {
+            type: Sequelize.STRING
+        },
+        writeDate: {
+            type: Sequelize.DATE,
+            defaultValue: Sequelize.NOW
+        }
+    });
+
+    const Job = connection.define("job", {
+        no: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true
+        },
+        title: {
+            type: Sequelize.STRING  // 제목
+        },
+        language: {
+            type: Sequelize.STRING  // 사용 언어
+        },
+        members: {
+            type: Sequelize.INTEGER  // 현재 인원
+        },
+        capacity: {
+            type: Sequelize.INTEGER  // 모집 인원
+        },
+        meetingFrequency: {
+            type: Sequelize.STRING  // 미팅 빈도
+        },
+        description: {
+            type: Sequelize.TEXT  // 세부 내용
         },
         salary: {
-            type: Sequelize.STRING  // 채용 공고의 월급
+            type: Sequelize.STRING  // 월급 (채용 공고 전용)
         },
         photo: {
             type: Sequelize.BLOB('long') // 첨부 사진 파일 (BLOB 타입으로 설정)

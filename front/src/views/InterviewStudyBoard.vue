@@ -112,30 +112,22 @@ export default {
       showModal: false,
       modalType: "studyGroup", // Modal 유형 (스터디 그룹 또는 채용 공고)
       newGroup: {
-        title: "",
-        language: "",
-        capacity: "",
-        description: "",
+        title: "", // 제목
+        language: "", // 사용 언어
+        members: "0", // 현재 인원
+        capacity: "", // 모집 인원
+        meetingFrequency: "", // 미팅 빈도
+        description: "", // 세부 내용
         methodology: "", // 공부 방법 (스터디 그룹 전용)
         salary: "", // 월급 (채용 공고 전용)
-        photo: null // 첨부 사진 파일
+        photo: null, // 첨부 사진 파일
+        writer: ""
       },
     };
   },
   methods: {
     setActiveTab(tabName) {
       this.activeTab = tabName;
-    },
-    fetchStudyGroups() {
-      // 수정된 API 요청
-      axios.get("/api/study-groups")
-        .then((response) => {
-          this.studyGroups = response.data;
-        })
-        .catch((error) => {
-          console.error("Error fetching study groups:", error.response?.data || error.message);
-          alert(`스터디 그룹 데이터를 불러오는데 실패했습니다: ${error.response?.data?.message || error.message}`);
-        });
     },
     // Open modal
     openNewGroupModal() {
@@ -163,43 +155,20 @@ export default {
         return;
       }
 
-      // FormData 생성
-      const formData = new FormData();
-      formData.append("title", this.newGroup.title);
-      formData.append("language", this.newGroup.language);
-      formData.append("capacity", this.newGroup.capacity);
-      formData.append("description", this.newGroup.description);
-      if (this.modalType === "studyGroup") {
-        formData.append("methodology", this.newGroup.methodology);
-      } else if (this.modalType === "jobPost") {
-        formData.append("salary", this.newGroup.salary);
-      }
-      if (this.newGroup.photo) {
-        formData.append("photo", this.newGroup.photo);
-      }
-
       // API 엔드포인트 선택
       const endpoint =
         this.modalType === "studyGroup"
-          ? "/api/studyGroups/study-groups"
-          : "/api/studyGroups/job-posts";
+          ? "/api/studyGroups/study/create"
+          : "/api/studyGroups/job/create";
 
       // POST 요청
-      axios.post(endpoint, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-        .then((response) => {
-          alert(response.data.message);
-          if (this.modalType === "studyGroup") {
-            this.studyGroups.push(response.data.group);
-          }
+      axios.post(endpoint, this.newGroup)
+        .then(response => {
+          alert("글이 작성되었습니다");
+          this.resetForm();
           this.closeNewGroupModal();
-        })
-        .catch((error) => {
-          console.error("Error creating group:", error);
-          alert("그룹 생성에 실패했습니다.");
+          this.$router.push("/interviewstudyboard");
+          window.location.reload();
         });
     },
     // Reset form
@@ -214,10 +183,20 @@ export default {
         photo: null,
       };
     },
+    fetchStudyGroups() {
+      axios.get("/api/studyGroups/study/find")
+        .then((response) => {
+          this.studyGroups = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching study groups:", error.response?.data || error.message);
+          alert(`스터디 그룹 데이터를 불러오는데 실패했습니다: ${error.response?.data?.message || error.message}`);
+        });
+    },
   },
   mounted() {
-    this.fetchStudyGroups();
-  },
+    this.fetchStudyGroups(); // 컴포넌트가 마운트될 때 스터디 그룹 목록 가져오기
+  }
 };
 </script>
 

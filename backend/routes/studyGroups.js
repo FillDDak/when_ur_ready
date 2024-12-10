@@ -11,10 +11,6 @@ const groupUploadFolder = path.join(groupStaticPath, 'groupUpload');
 // 파일 업로드 설정
 const groupUpload = multer({ dest: groupUploadFolder });
 
-// 데이터 저장소 (임시로 메모리에 저장)
-let studyGroups = [];
-let jobPosts = [];
-
 // Multer 설정 (파일 업로드)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -26,69 +22,37 @@ const storage = multer.diskStorage({
   },
 });
 
+
 router.post("/study/create", async function (req, res) {
-  var group = req.body
-  var createdGroup = await sequelize.models.group.create(group)
-  res.json(createdGroup)
-
-})
-
-// API Routes
-// 1. 스터디 그룹 목록 조회
-router.get("/study-groups", (req, res) => {
-  res.json(studyGroups);
+  try {
+    var group = req.body;
+    var createdGroup = await sequelize.models.group.create(group);
+    res.json(createdGroup);
+  } catch (error) {
+    console.error("Error creating group:", error);
+    res.status(500).json({ message: "스터디 그룹 생성 중 오류가 발생했습니다.", error });
+  }
 });
 
-// 2. 채용 공고 목록 조회
-router.get("/job-posts", (req, res) => {
-  res.json(jobPosts);
+router.get("/study/find", async function (req, res) {
+  try {
+    const studyGroups = await sequelize.models.group.findAll(); // 모든 그룹 가져오기
+    res.json(studyGroups);
+  } catch (error) {
+    console.error("Error fetching study groups:", error);
+    res.status(500).json({ message: "스터디 그룹 목록을 불러오는 중 오류가 발생했습니다.", error });
+  }
 });
 
-// 3. 스터디 그룹 생성
-router.post("/study-groups", groupUpload.single("photo"), (req, res) => {
-  const { title, language, capacity, description, methodology } = req.body;
-  const photo = req.file ? `/groupUpload/${req.file.filename}` : null;
-
-  const newGroup = {
-    id: Date.now(),
-    title,
-    language,
-    capacity: parseInt(capacity, 10),
-    description,
-    methodology,
-    photo,
-    members: 0,
-  };
-
-  studyGroups.push(newGroup);
-
-  res.json({
-    message: "스터디 그룹이 성공적으로 생성되었습니다!",
-    group: newGroup,
-  });
-});
-
-// 4. 채용 공고 생성
-router.post("/job-posts", groupUpload.single("photo"), (req, res) => {
-  const { title, language, capacity, description, salary } = req.body;
-  const photo = req.file ? `/groupUpload/${req.file.filename}` : null;
-
-  const newJobPost = {
-    id: Date.now(),
-    title,
-    language,
-    capacity: parseInt(capacity, 10),
-    description,
-    salary: parseInt(salary, 10),
-    photo,
-  };
-
-  jobPosts.push(newJobPost);
-
-  res.json({
-    message: "채용 공고가 성공적으로 생성되었습니다!",
-    jobPost: newJobPost,
-  });
+router.post("/job/create", async function (req, res) {
+  try {
+    var group = req.body;
+    var createdGroup = await sequelize.models.group.create(group);
+    res.json(createdGroup);
+  } catch (error) {
+    console.error("Error creating group:", error);
+    res.status(500).json({ message: "스터디 그룹 생성 중 오류가 발생했습니다.", error });
+  }
 });
 
 module.exports = router;
