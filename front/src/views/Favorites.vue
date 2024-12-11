@@ -13,80 +13,73 @@
     <!-- 최근에 본 페이지 -->
     <section class="section recent-section">
       <h2 class="section-title">👀 최근에 본 페이지</h2>
-      <v-row>
-        <v-col 
-          v-for="(item, index) in recentPages" 
-          :key="'recent-' + index" 
-          cols="12" 
-          md="4"
+      <div class="scroll-container">
+        <v-card
+          v-for="(item, index) in recentPages"
+          :key="'recent-' + index"
+          class="recent-card"
         >
-          <v-card class="recent-card">
-            <v-card-title>
-              <v-icon color="primary" class="mr-2">mdi-clock</v-icon>
-              {{ item.title }}
-            </v-card-title>
-            <v-card-text>
-              <p>{{ item.description }}</p>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" outlined @click="viewDetails(item)">상세 보기</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+          <v-card-title>
+            <v-icon color="primary" class="mr-2">mdi-clock</v-icon>
+            {{ item.title }}
+          </v-card-title>
+          <v-card-text>
+            <p>{{ item.description }}</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" outlined @click="viewDetails(item)">상세 보기</v-btn>
+            <v-btn color="error" @click="removeFromRecent(index)">삭제</v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
     </section>
 
     <!-- 추천 면접 페이지 -->
     <section class="section recommended-section">
       <h2 class="section-title">💡 추천 면접 페이지</h2>
-      <v-row>
-        <v-col 
-          v-for="(item, index) in recommendedPages" 
-          :key="'recommended-' + index" 
-          cols="12" 
-          md="4"
+      <div class="scroll-container">
+        <v-card
+          v-for="(item, index) in recommendedPages"
+          :key="'recommended-' + index"
+          class="recommended-card"
         >
-          <v-card class="recommended-card">
-            <v-card-title>
-              <v-icon color="green" class="mr-2">mdi-lightbulb-on</v-icon>
-              {{ item.title }}
-            </v-card-title>
-            <v-card-text>
-              <p>{{ item.description }}</p>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="success" @click="addToFavorites(item)">즐겨찾기에 추가</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+          <v-card-title>
+            <v-icon color="green" class="mr-2">mdi-lightbulb-on</v-icon>
+            {{ item.title }}
+          </v-card-title>
+          <v-card-text>
+            <p>{{ item.description }}</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="success" @click="addToFavorites(item)">즐겨찾기에 추가</v-btn>
+            <v-btn color="error" @click="removeFromRecommended(index)">삭제</v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
     </section>
 
     <!-- 내 즐겨찾기 -->
     <section class="section favorites-section">
       <h2 class="section-title">📁 내 즐겨찾기</h2>
-      <v-row>
-        <v-col 
-          v-for="(item, index) in filteredFavorites" 
-          :key="'favorite-' + index" 
-          cols="12" 
-          md="4"
+      <div class="scroll-container">
+        <v-card
+          v-for="(item, index) in filteredFavorites"
+          :key="'favorite-' + index"
+          class="favorites-card"
         >
-          <v-card class="favorites-card">
-            <v-card-title>
-              <v-icon color="red" class="mr-2">mdi-star</v-icon>
-              {{ item.title }}
-            </v-card-title>
-            <v-card-text>
-              <p>{{ item.description }}</p>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="error" @click="removeFavorite(index)">삭제</v-btn>
-              <v-btn color="blue" outlined @click="shareFavorite(item)">공유</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+          <v-card-title>
+            <v-icon color="red" class="mr-2">mdi-star</v-icon>
+            {{ item.title }}
+          </v-card-title>
+          <v-card-text>
+            <p>{{ item.description }}</p>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="error" @click="removeFavorite(index)">삭제</v-btn>
+            <v-btn color="blue" outlined @click="shareFavorite(item)">공유</v-btn>
+          </v-card-actions>
+        </v-card>
+      </div>
     </section>
 
     <!-- 미리보기 모달 -->
@@ -151,12 +144,29 @@ export default {
         alert('이미 즐겨찾기에 추가된 항목입니다.');
       }
     },
+    removeFromRecent(index) {
+      this.recentPages.splice(index, 1); // 최근에 본 페이지에서 항목 삭제
+    },
+    removeFromRecommended(index) {
+      this.recommendedPages.splice(index, 1); // 추천 면접 페이지에서 항목 삭제
+    },
     shareFavorite(item) {
       const shareText = `즐겨찾기 공유: ${item.title} - ${item.description}`;
       navigator.clipboard.writeText(shareText).then(() => {
         alert('공유 링크가 복사되었습니다!');
       });
+    },
+    autoScroll() {
+      setInterval(() => {
+        const scrollContainer = document.querySelectorAll('.scroll-container');
+        scrollContainer.forEach(container => {
+          container.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+      }, 3000); // 3초마다 자동으로 스크롤 이동
     }
+  },
+  mounted() {
+    this.autoScroll();
   }
 };
 </script>
@@ -179,22 +189,39 @@ export default {
   border-radius: 8px;
 }
 
-.recent-section {
-  background-color: #e3f2fd; /* Light blue */
-}
-
-.recommended-section {
-  background-color: #e8f5e9; /* Light green */
-}
-
+.recent-section,
+.recommended-section,
 .favorites-section {
-  background-color: #fce4ec; /* Light pink */
+  background-color: #f1f1f1;
+  overflow-x: auto;
+}
+
+.scroll-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
+
+.scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 20px;
+}
+
+.recent-card,
+.recommended-card,
+.favorites-card {
+  flex: 0 0 auto;
+  width: 300px;
 }
 
 .recent-card:hover,

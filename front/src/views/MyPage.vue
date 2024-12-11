@@ -148,10 +148,16 @@ export default {
     onPhotoChange(event) {
       const file = event.target.files[0];
       if (file) {
-        this.profile.photo = URL.createObjectURL(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.profile.photo = e.target.result;
+          this.saveProfile(); // 사진 변경 시 자동 저장
+        };
+        reader.readAsDataURL(file);
       }
     },
     saveProfile() {
+      localStorage.setItem('profile', JSON.stringify(this.profile));
       alert('프로필 정보가 저장되었습니다.');
     },
     togglePasswordVisibility(field) {
