@@ -2,14 +2,20 @@
   <div class="chatbot-container">
     <h2>추출된 키워드:</h2>
     <div class="keywords-container">
-      <span v-for="(keyword, index) in keywordsArray" :key="index" class="keyword-box">
-        {{ keyword }}
-      </span>
+      <transition-group name="fade" tag="div">
+        <span
+          v-for="(keyword, index) in keywordsArray"
+          :key="index"
+          class="keyword-box"
+          :style="{ animationDelay: `${index * 0.2}s` }"
+        >
+          {{ keyword }}
+        </span>
+      </transition-group>
     </div>
     <div class="buttons-container">
       <button @click="generateQuestions('predict')" class="btn btn-primary" :disabled="loading">
-        <span v-if="!loading">예상 질문 뽑기</span>
-        <span v-else>예상 질문 뽑기 중...</span>
+        예상 질문 뽑기
       </button>
       <button @click="generateQuestions('company')" class="btn btn-secondary" :disabled="loading">
         회사 관련 질문 뽑기
@@ -79,22 +85,50 @@ export default {
   margin: 20px;
 }
 
+/* '추출된 키워드' 텍스트에 애니메이션 효과 추가 */
+h2 {
+  animation: fadeInDown 1s forwards; /* 애니메이션 속도 */
+  margin-bottom: 20px;
+}
 .keywords-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 50px;
   justify-content: center;
   margin: 20px 0;
 }
 
 .keyword-box {
-  background-color: #000;
+  background-color: #000000;
   color: #fff;
   border-radius: 15px;
   padding: 10px 15px;
   font-size: 14px;
   font-weight: bold;
   display: inline-block;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+  width: calc(20% - 10px); 
+  box-sizing: border-box; 
+  word-break: break-word; 
+  margin-bottom: 15px; 
+  margin-right: 10px; 
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 
 .buttons-container {
@@ -110,18 +144,18 @@ export default {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #abcd55;
   color: white;
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: #abcd55;
   color: white;
 }
 
 .note {
   font-size: 12px;
-  color: gray;
+  color: rgb(156, 147, 147);
   margin-top: 20px;
 }
 

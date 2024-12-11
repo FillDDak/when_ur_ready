@@ -119,4 +119,5 @@ export default {
   font-weight: bold;
   white-space: nowrap; /* 텍스트가 길어지지 않도록 방지 */
 }
+
 </style>
