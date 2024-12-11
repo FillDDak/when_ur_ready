@@ -1,6 +1,6 @@
 <template>
   <div class="chatbot-container">
-    <h2>추출된 키워드:</h2>
+    <h2>추출된 키워드</h2>
     <div class="keywords-container">
       <transition-group name="fade" tag="div">
         <span
